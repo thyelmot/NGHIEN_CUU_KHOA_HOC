@@ -7,27 +7,39 @@ Triển khai **Phương án 1** trong [`../DiffMM_FlowMatching_Optimization_Plan
 - **`DiffMM-OT/`** — bản fork đầy đủ của [HKUDS/DiffMM](https://github.com/HKUDS/DiffMM) đã có sẵn patch Phương án 1 áp trực tiếp vào code (`Params.py`, `Model.py`, `Main.py`). Đây là folder bạn cần **đẩy (push) lên GitHub của chính mình** — xem hướng dẫn bên dưới.
 - **`DiffMM_PhuongAn1_OT_Colab.ipynb`** — notebook chạy trên Google Colab: clone code từ repo GitHub *của bạn* (không phải clone HKUDS/DiffMM gốc rồi patch lúc chạy nữa — code đã patch sẵn trong `DiffMM-OT/`), tự tải dữ liệu từ Google Drive, chạy huấn luyện, xuất bảng chỉ số tốt nhất (Recall@20 / NDCG@20 / Precision@20).
 
-## Bước 1 — Đẩy `DiffMM-OT/` lên GitHub của bạn
+## Bước 1 — Đẩy `DiffMM-OT/` lên GitHub riêng của bạn
 
-Folder `DiffMM-OT/` đã là một git repo cục bộ (đã `git init` + commit sẵn 1 commit). Bạn chỉ cần tạo
-repo trống trên GitHub rồi trỏ remote vào đó:
+Vì folder `DiffMM-OT/` bên trong dự án này hiện đang được theo dõi bởi git repo lớn của cả project
+(`NGHIEN_CUU_KHOA_HOC`), **để tránh lặp lại lỗi "repo bị lồng thêm 1 cấp thư mục"**, đã có sẵn một bản
+sao **độc lập, riêng biệt, đã git init + commit sẵn** tại:
+
+```
+E:\NAM_BA\DiffMM-OT
+```
+
+(nằm ngoài git repo của `NGHIEN_CUU_KHOA_HOC` — không lồng bên trong project, không dính lỗi lồng thư
+mục nữa). Bạn chỉ cần tạo repo trống trên GitHub rồi push từ đúng thư mục này:
 
 1. Vào https://github.com/new, tạo một repo mới (ví dụ tên `DiffMM-OT`), **để trống, không tick
    "Initialize with README"**.
 2. Chạy các lệnh sau (thay `<your-username>` và `<repo-name>` cho đúng):
 
 ```bash
-cd phuong_an_1_OT_noise_scheduler/DiffMM-OT
+cd /e/NAM_BA/DiffMM-OT
 git remote add origin https://github.com/<your-username>/<repo-name>.git
 git branch -M main
 git push -u origin main
 ```
 
-3. Copy URL repo (`https://github.com/<your-username>/<repo-name>.git`) — sẽ dùng ở Cell 1 của
-   notebook.
+3. Copy URL repo (`https://github.com/<your-username>/<repo-name>.git`) — dán vào `GITHUB_REPO_URL`
+   ở Cell 1 của notebook.
 
 *(Nếu dùng GitHub CLI: `gh repo create <repo-name> --private --source=. --push` chạy trong thư mục
-`DiffMM-OT/` sẽ làm cả 3 bước trên trong 1 lệnh.)*
+`E:\NAM_BA\DiffMM-OT` sẽ làm cả 3 bước trên trong 1 lệnh.)*
+
+Mỗi khi tôi sửa thêm gì trong `phuong_an_1_OT_noise_scheduler/DiffMM-OT/` (bản trong project), bạn cần
+đồng bộ lại sang `E:\NAM_BA\DiffMM-OT` rồi `git add -A && git commit ... && git push` lại — hoặc báo
+tôi, tôi sẽ tự đồng bộ + commit giúp (không tự push nếu chưa xác nhận với bạn).
 
 ⚠️ **Chỉ dùng lệnh `git push` ở trên, KHÔNG kéo-thả folder `DiffMM-OT` lên qua giao diện web GitHub
 ("Add file > Upload files")** — cách đó sẽ tạo thêm 1 cấp thư mục lồng nhau (`<repo>/DiffMM-OT/Main.py`
@@ -45,14 +57,24 @@ Dữ liệu trên Google Drive cần chứa (ở đâu đó bên trong file/thư
 
 ## Troubleshooting
 
-**Cell 3 báo lỗi `AssertionError: ... không đúng cấu trúc DiffMM-OT` dù clone hiện "done"** — nghĩa là
-`git clone` chạy thành công (tải được dữ liệu) nhưng `Main.py` không nằm ngay trong thư mục gốc vừa
-clone. Nguyên nhân phổ biến nhất: repo trên GitHub bị lồng thêm 1 cấp thư mục (`<repo>/DiffMM-OT/Main.py`
-thay vì `<repo>/Main.py`) — thường do push nhầm cả folder cha, hoặc kéo-thả folder qua giao diện web
-GitHub thay vì dùng `git push` (xem cảnh báo ở Bước 1). Notebook (bản mới nhất) đã tự dò tìm `Main.py`
-trong toàn bộ cây thư mục vừa clone và tự điều chỉnh lại đường dẫn nếu phát hiện bị lồng — nếu vẫn báo
-lỗi, kiểm tra lại đúng nội dung đã push lên repo có đúng là *nội dung bên trong* `DiffMM-OT/` hay
-không (mở repo trên GitHub, `Main.py` phải nằm ngay trang gốc của repo, không nằm trong 1 thư mục con).
+**Cell 3 báo "KHÔNG tìm thấy Main.py ở đâu" dù clone hiện "done"** — nghĩa là `git clone` chạy thành
+công (tải được dữ liệu) nhưng `Main.py` không nằm ngay trong thư mục gốc vừa clone. Nguyên nhân phổ
+biến nhất: repo trên GitHub bị lồng thêm 1 cấp thư mục (`<repo>/DiffMM-OT/Main.py` thay vì
+`<repo>/Main.py`) — thường do push nhầm cả folder cha, hoặc kéo-thả folder qua giao diện web GitHub
+thay vì dùng `git push` (xem cảnh báo ở Bước 1). Notebook (bản mới nhất) đã tự dò tìm `Main.py` trong
+toàn bộ cây thư mục vừa clone và tự điều chỉnh lại đường dẫn nếu phát hiện bị lồng — nếu vẫn báo lỗi,
+kiểm tra lại đúng nội dung đã push lên repo có đúng là *nội dung bên trong* `DiffMM-OT/` hay không (mở
+repo trên GitHub, `Main.py` phải nằm ngay trang gốc của repo, không nằm trong 1 thư mục con).
+
+**"Đã sửa lỗi trên GitHub rồi mà chạy lại vẫn lỗi y hệt"** — Cell 3 (bản mới nhất) **luôn xoá bản clone
+cũ trong Colab rồi clone lại từ đầu** mỗi lần chạy, nên chỉ cần chạy lại Cell 3 (không cần Restart
+runtime) là sẽ lấy đúng code mới nhất bạn vừa push. Nếu vẫn thấy lỗi cũ, kiểm tra lại: bạn đã thực sự
+`git push` code mới lên đúng repo mà `GITHUB_REPO_URL` đang trỏ tới chưa (dễ nhầm giữa nhiều repo nếu
+có cả bản trong `NGHIEN_CUU_KHOA_HOC` lẫn bản riêng ở `E:\NAM_BA\DiffMM-OT`).
+
+**Cell 6 báo lỗi `AttributeError: 'coo_matrix' object has no attribute 'A'`** — lỗi tương thích scipy
+đã được sửa trong `DataHandler.py` (đổi `.A` → `.toarray()`). Nếu vẫn gặp, có thể repo bạn đang trỏ tới
+là bản cũ chưa có fix này — kiểm tra lại `GITHUB_REPO_URL` và đảm bảo đã push commit mới nhất.
 
 **Cell 7 báo `FileNotFoundError` với `train_log.txt`** — Cell 6 chưa chạy xong trong phiên hiện tại
 (hoặc Colab bị ngắt kết nối/reset giữa chừng làm mất file tạm). Chạy lại Cell 6, đợi huấn luyện xong
