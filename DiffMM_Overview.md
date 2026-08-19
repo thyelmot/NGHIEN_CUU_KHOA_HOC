@@ -41,58 +41,58 @@ Kiến trúc (Architecture) của DiffMM gồm 3 phần chính, được huấn 
 **Giải thích Ký hiệu và Công thức:**
 * $u$: Ký hiệu đại diện cho một Người dùng (User) cụ thể.
 * $I$: Tập hợp chứa toàn bộ các Mục tiêu/Sản phẩm (Items) có trong hệ thống. $|I|$ là tổng số lượng các sản phẩm đó.
-* $\mathbf{a}_u = [a_{u,0}, a_{u,1}, \dots, a_{u,|I|-1}]$: Đây là một vector (một mảng các con số) biểu diễn lịch sử tương tác của người dùng $u$. Nếu $a_{u,i} = 1$, nghĩa là người dùng $u$ đã từng tương tác với sản phẩm $i$. Nếu bằng $0$, nghĩa là chưa tương tác.
-* $\alpha_0 = \mathbf{a}_u$: $\alpha$ (đọc là alpha) biểu diễn trạng thái của vector tại một thời điểm. $\alpha_0$ là trạng thái ở thời điểm ban đầu (bước 0), tức là dữ liệu gốc nguyên bản, chưa có nhiễu.
+* $\mathbf{a}\sb u = [a\sb {u,0}, a\sb {u,1}, \dots, a\sb {u,|I|-1}]$: Đây là một vector (một mảng các con số) biểu diễn lịch sử tương tác của người dùng $u$. Nếu $a\sb {u,i} = 1$, nghĩa là người dùng $u$ đã từng tương tác với sản phẩm $i$. Nếu bằng $0$, nghĩa là chưa tương tác.
+* $\alpha\sb 0 = \mathbf{a}\sb u$: $\alpha$ (đọc là alpha) biểu diễn trạng thái của vector tại một thời điểm. $\alpha\sb 0$ là trạng thái ở thời điểm ban đầu (bước 0), tức là dữ liệu gốc nguyên bản, chưa có nhiễu.
 * $T$: Tổng số bước thời gian (Time steps) trong quá trình thêm nhiễu.
-* $\alpha_t$: Trạng thái của vector tương tác tại bước thời gian thứ $t$ (đã bị thêm một lượng nhiễu nhất định).
+* $\alpha\sb t$: Trạng thái của vector tương tác tại bước thời gian thứ $t$ (đã bị thêm một lượng nhiễu nhất định).
 
 **Công thức thêm nhiễu từng bước:**
-$$q(\alpha_t | \alpha_{t-1}) = \mathcal{N}(\alpha_t; \sqrt{1-\beta_t}\alpha_{t-1}, \beta_t \mathbf{I})$$
-* **Ý nghĩa công thức:** Xác suất (ký hiệu $q$) để đạt được trạng thái $\alpha_t$ nếu ta đã biết trạng thái trước đó $\alpha_{t-1}$ tuân theo một Phân phối Chuẩn (Gauss) ký hiệu là $\mathcal{N}$ (Normal Distribution - Phân phối hình chuông ngẫu nhiên).
-* $\beta_t$ (đọc là beta): Mức độ nhiễu (Variance - phương sai) được thêm vào tại bước $t$.
-* $\sqrt{1-\beta_t}\alpha_{t-1}$: Đây là giá trị trung bình (Mean) của phân phối, cho thấy trạng thái hiện tại vẫn giữ lại một phần thông tin từ trạng thái trước đó, nhưng bị thu hẹp lại một chút (nhân với phần căn bậc hai).
-* $\mathbf{I}$: Ma trận đơn vị (Identity Matrix), kết hợp với $\beta_t$ đại diện cho mức độ nhiễu ngẫu nhiên được bơm vào.
+$$q(\alpha\sb t | \alpha\sb {t-1}) = \mathcal{N}(\alpha\sb t; \sqrt{1-\beta\sb t}\alpha\sb {t-1}, \beta\sb t \mathbf{I})$$
+* **Ý nghĩa công thức:** Xác suất (ký hiệu $q$) để đạt được trạng thái $\alpha\sb t$ nếu ta đã biết trạng thái trước đó $\alpha\sb {t-1}$ tuân theo một Phân phối Chuẩn (Gauss) ký hiệu là $\mathcal{N}$ (Normal Distribution - Phân phối hình chuông ngẫu nhiên).
+* $\beta\sb t$ (đọc là beta): Mức độ nhiễu (Variance - phương sai) được thêm vào tại bước $t$.
+* $\sqrt{1-\beta\sb t}\alpha\sb {t-1}$: Đây là giá trị trung bình (Mean) của phân phối, cho thấy trạng thái hiện tại vẫn giữ lại một phần thông tin từ trạng thái trước đó, nhưng bị thu hẹp lại một chút (nhân với phần căn bậc hai).
+* $\mathbf{I}$: Ma trận đơn vị (Identity Matrix), kết hợp với $\beta\sb t$ đại diện cho mức độ nhiễu ngẫu nhiên được bơm vào.
 
 **Công thức tính gộp nhiễu trực tiếp từ ban đầu:**
-Nhờ tính chất toán học của phân phối chuẩn, thay vì tính từng bước, ta có thể nhảy cóc từ $\alpha_0$ lên $\alpha_t$:
-$$\alpha_t = \sqrt{\bar{\gamma}_t}\alpha_0 + \sqrt{1 - \bar{\gamma}_t}\epsilon, \quad \epsilon \sim \mathcal{N}(0, \mathbf{I})$$
-* $\gamma_t = 1 - \beta_t$ (đọc là gamma): Lượng thông tin gốc còn được giữ lại ở mỗi bước.
-* $\bar{\gamma}_t = \prod_{i=1}^t \gamma_i$: Ký hiệu $\prod$ (Pi) nghĩa là tích (nhân tất cả lại với nhau). $\bar{\gamma}_t$ là tổng lượng thông tin gốc còn sót lại sau $t$ bước.
+Nhờ tính chất toán học của phân phối chuẩn, thay vì tính từng bước, ta có thể nhảy cóc từ $\alpha\sb 0$ lên $\alpha\sb t$:
+$$\alpha\sb t = \sqrt{\bar{\gamma}\sb t}\alpha\sb 0 + \sqrt{1 - \bar{\gamma}\sb t}\epsilon, \quad \epsilon \sim \mathcal{N}(0, \mathbf{I})$$
+* $\gamma\sb t = 1 - \beta\sb t$ (đọc là gamma): Lượng thông tin gốc còn được giữ lại ở mỗi bước.
+* $\bar{\gamma}\sb t = \prod\sb {i=1}^t \gamma\sb i$: Ký hiệu $\prod$ (Pi) nghĩa là tích (nhân tất cả lại với nhau). $\bar{\gamma}\sb t$ là tổng lượng thông tin gốc còn sót lại sau $t$ bước.
 * $\epsilon$ (đọc là epsilon): Biến ngẫu nhiên đại diện cho tín hiệu nhiễu thuần túy (Noise), được lấy mẫu từ phân phối chuẩn $\mathcal{N}(0, \mathbf{I})$ (trung bình bằng 0, phương sai bằng 1).
-* **Ý nghĩa công thức:** Vector ở bước $t$ ($\alpha_t$) đơn giản là sự pha trộn giữa dữ liệu gốc ($\alpha_0$) và một lượng nhiễu ngẫu nhiên ($\epsilon$). Càng về sau (khi $t$ lớn), phần gốc càng mờ nhạt và phần nhiễu càng lớn.
+* **Ý nghĩa công thức:** Vector ở bước $t$ ($\alpha\sb t$) đơn giản là sự pha trộn giữa dữ liệu gốc ($\alpha\sb 0$) và một lượng nhiễu ngẫu nhiên ($\epsilon$). Càng về sau (khi $t$ lớn), phần gốc càng mờ nhạt và phần nhiễu càng lớn.
 
 ---
 
 ### Bước 2: Quá trình Khôi phục Đồ thị Ngược (Reverse Graph Denoising - Quá trình khử nhiễu để tái tạo dữ liệu)
 
-**Mô tả:** Mô hình học cách đi lùi, tức là từ trạng thái nhiễu $\alpha_t$, nó cố gắng đoán xem dữ liệu gốc $\alpha_0$ trông như thế nào.
+**Mô tả:** Mô hình học cách đi lùi, tức là từ trạng thái nhiễu $\alpha\sb t$, nó cố gắng đoán xem dữ liệu gốc $\alpha\sb 0$ trông như thế nào.
 
 **Giải thích Ký hiệu và Công thức:**
-* $\hat{\alpha}_\theta(\alpha_t, t)$: Một hàm toán học được biểu diễn bởi một mạng nơ-ron nhân tạo (MLP - Multi-Layer Perceptron), với các tham số (thông số cấu hình) là $\theta$ (theta). Ký hiệu mũ $\hat{}$ (hat) thể hiện đây là một giá trị *được dự đoán*, không phải giá trị thực tế. Mạng này nhận đầu vào là trạng thái bị nhiễu $\alpha_t$ và thời điểm $t$, để dự đoán ra dữ liệu gốc $\alpha_0$.
+* $\hat{\alpha}\sb \theta(\alpha\sb t, t)$: Một hàm toán học được biểu diễn bởi một mạng nơ-ron nhân tạo (MLP - Multi-Layer Perceptron), với các tham số (thông số cấu hình) là $\theta$ (theta). Ký hiệu mũ $\hat{}$ (hat) thể hiện đây là một giá trị *được dự đoán*, không phải giá trị thực tế. Mạng này nhận đầu vào là trạng thái bị nhiễu $\alpha\sb t$ và thời điểm $t$, để dự đoán ra dữ liệu gốc $\alpha\sb 0$.
 
 **Hàm mất mát chính (ELBO Loss):**
-$$\mathcal{L}_{elbo} = \mathbb{E}_{t \sim U(1, T), q(\alpha_0)} \left[ \| \hat{\alpha}_\theta(\alpha_t, t) - \alpha_0 \|_2^2 \right]$$
+$$\mathcal{L}\sb {elbo} = \mathbb{E}\sb {t \sim U(1, T), q(\alpha\sb 0)} \left[ \| \hat{\alpha}\sb \theta(\alpha\sb t, t) - \alpha\sb 0 \|\sb 2^2 \right]$$
 * $\mathcal{L}$ (Loss): Hàm mất mát (thước đo mức độ sai sót của mô hình, càng nhỏ càng tốt).
-* $\mathbb{E}$ (Expectation): Kỳ vọng (giá trị trung bình toán học) trên tất cả các bước thời gian $t$ và các dữ liệu gốc $\alpha_0$.
-* $\| x \|_2^2$: Ký hiệu chuẩn bậc 2 bình phương (L2 Norm squared). Nó chỉ đơn giản là phép tính tổng bình phương khoảng cách giữa hai giá trị.
-* **Ý nghĩa công thức:** Mô hình cố gắng điều chỉnh để khoảng cách (sự khác biệt) giữa kết quả nó dự đoán ($\hat{\alpha}_\theta(\alpha_t, t)$) và dữ liệu gốc thực tế ($\alpha_0$) là nhỏ nhất có thể. Càng giống gốc càng tốt.
+* $\mathbb{E}$ (Expectation): Kỳ vọng (giá trị trung bình toán học) trên tất cả các bước thời gian $t$ và các dữ liệu gốc $\alpha\sb 0$.
+* $\| x \|\sb 2^2$: Ký hiệu chuẩn bậc 2 bình phương (L2 Norm squared). Nó chỉ đơn giản là phép tính tổng bình phương khoảng cách giữa hai giá trị.
+* **Ý nghĩa công thức:** Mô hình cố gắng điều chỉnh để khoảng cách (sự khác biệt) giữa kết quả nó dự đoán ($\hat{\alpha}\sb \theta(\alpha\sb t, t)$) và dữ liệu gốc thực tế ($\alpha\sb 0$) là nhỏ nhất có thể. Càng giống gốc càng tốt.
 
 **Cơ chế Tiêm Tín Hiệu Nhận Biết Phương Thức (Modality-aware Signal Injection - MSI):**
 Khác với các hệ thống thường, mô hình này muốn dữ liệu khôi phục không chỉ đúng mà còn phải mang dấu ấn của loại phương tiện (Modality - ví dụ: âm thanh, hình ảnh).
 
-$$\mathcal{L}_{msi}^m = \| \hat{\alpha}_0 \cdot \mathbf{e}_i^m - \alpha_0 \cdot \mathbf{e}_i \|_2^2$$
+$$\mathcal{L}\sb {msi}^m = \| \hat{\alpha}\sb 0 \cdot \mathbf{e}\sb i^m - \alpha\sb 0 \cdot \mathbf{e}\sb i \|\sb 2^2$$
 * $m$: Ký hiệu cho loại phương thức (Modality), ví dụ $m$ có thể là chữ, $m$ có thể là hình.
-* $\mathbf{e}_i$: Vector biểu diễn danh tính (ID Embedding - một chuỗi số đại diện duy nhất cho mục tiêu $i$).
-* $\mathbf{e}_i^m$: Vector biểu diễn đặc trưng đa phương thức (Modality Feature Embedding - ví dụ: một chuỗi số miêu tả đặc điểm hình ảnh của mục tiêu $i$).
-* $\hat{\alpha}_0$: Tương tác dự đoán (dữ liệu mô hình sinh ra).
-* $\alpha_0$: Tương tác thực tế.
+* $\mathbf{e}\sb i$: Vector biểu diễn danh tính (ID Embedding - một chuỗi số đại diện duy nhất cho mục tiêu $i$).
+* $\mathbf{e}\sb i^m$: Vector biểu diễn đặc trưng đa phương thức (Modality Feature Embedding - ví dụ: một chuỗi số miêu tả đặc điểm hình ảnh của mục tiêu $i$).
+* $\hat{\alpha}\sb 0$: Tương tác dự đoán (dữ liệu mô hình sinh ra).
+* $\alpha\sb 0$: Tương tác thực tế.
 * $\cdot$: Phép nhân.
-* **Ý nghĩa công thức:** Ta muốn sản phẩm (phép nhân) giữa tương tác dự đoán ($\hat{\alpha}_0$) kết hợp với đặc trưng phương thức ($\mathbf{e}_i^m$) phải giống nhất có thể với sản phẩm của tương tác thực tế ($\alpha_0$) kết hợp với danh tính người dùng gốc ($\mathbf{e}_i$). Điều này "bắt ép" mô hình khi sinh ra dữ liệu phải lồng ghép kiến thức về hình ảnh/âm thanh vào kết quả.
+* **Ý nghĩa công thức:** Ta muốn sản phẩm (phép nhân) giữa tương tác dự đoán ($\hat{\alpha}\sb 0$) kết hợp với đặc trưng phương thức ($\mathbf{e}\sb i^m$) phải giống nhất có thể với sản phẩm của tương tác thực tế ($\alpha\sb 0$) kết hợp với danh tính người dùng gốc ($\mathbf{e}\sb i$). Điều này "bắt ép" mô hình khi sinh ra dữ liệu phải lồng ghép kiến thức về hình ảnh/âm thanh vào kết quả.
 
 **Hàm mất mát tổng hợp:**
-$$\mathcal{L}_{dm}^m = \mathcal{L}_{elbo} + \lambda_0 \mathcal{L}_{msi}^m$$
-* $\lambda_0$ (đọc là lambda không): Một hằng số (con số cố định) đóng vai trò như núm vặn âm lượng, quyết định xem thành phần MSI ($\mathcal{L}_{msi}^m$) quan trọng đến mức nào so với tổng thể.
-* **Ý nghĩa công thức:** Tổng sai sót ($\mathcal{L}_{dm}^m$) bằng sai sót trong quá trình khôi phục gốc cộng với sai sót trong việc ghép thông tin đa phương thức.
+$$\mathcal{L}\sb {dm}^m = \mathcal{L}\sb {elbo} + \lambda\sb 0 \mathcal{L}\sb {msi}^m$$
+* $\lambda\sb 0$ (đọc là lambda không): Một hằng số (con số cố định) đóng vai trò như núm vặn âm lượng, quyết định xem thành phần MSI ($\mathcal{L}\sb {msi}^m$) quan trọng đến mức nào so với tổng thể.
+* **Ý nghĩa công thức:** Tổng sai sót ($\mathcal{L}\sb {dm}^m$) bằng sai sót trong quá trình khôi phục gốc cộng với sai sót trong việc ghép thông tin đa phương thức.
 
 ---
 
@@ -102,24 +102,24 @@ $$\mathcal{L}_{dm}^m = \mathcal{L}_{elbo} + \lambda_0 \mathcal{L}_{msi}^m$$
 
 **Giải thích Ký hiệu và Công thức:**
 * $\mathcal{A}^m$: Đồ thị tương tác (Interaction Graph - mạng lưới kết nối giữa người dùng và sản phẩm) sau khi đã được làm sạch nhiễu cho loại phương thức $m$.
-* $\mathcal{N}_u^m$: Tập hợp những người hàng xóm (Neighbor) của người dùng $u$ trên đồ thị $\mathcal{A}^m$.
-* $\mathbf{z}_u^m$: Vector đại diện cho sở thích của người dùng $u$ sau khi gom thông tin từ các hàng xóm.
+* $\mathcal{N}\sb u^m$: Tập hợp những người hàng xóm (Neighbor) của người dùng $u$ trên đồ thị $\mathcal{A}^m$.
+* $\mathbf{z}\sb u^m$: Vector đại diện cho sở thích của người dùng $u$ sau khi gom thông tin từ các hàng xóm.
 
 **Lan truyền tin nhắn (Message Passing):**
-$$\mathbf{z}_u^m = \sum_{i \in \mathcal{N}_u^m} \frac{1}{\sqrt{|\mathcal{N}_u^m| |\mathcal{N}_i^m|}} \mathbf{e}_i^m$$
+$$\mathbf{z}\sb u^m = \sum\sb {i \in \mathcal{N}\sb u^m} \frac{1}{\sqrt{|\mathcal{N}\sb u^m| |\mathcal{N}\sb i^m|}} \mathbf{e}\sb i^m$$
 * $\sum$ (Sigma): Phép tính tổng. Ta cộng tất cả các thông tin từ các mục tiêu $i$ mà người dùng $u$ kết nối.
-* $\frac{1}{\sqrt{|\mathcal{N}_u^m| |\mathcal{N}_i^m|}}$: Một hệ số chuẩn hóa (Normalization factor - giúp các con số không bị quá lớn), tính dựa trên số lượng hàng xóm của $u$ và $i$.
-* **Ý nghĩa công thức:** Sở thích của người dùng được xác định bằng cách cộng gộp trung bình các đặc điểm ($\mathbf{e}_i^m$) của những sản phẩm mà họ (hoặc những người giống họ) đã tương tác trên đồ thị mới sinh ra. Vector sau đó được truyền tiếp qua mạng để thành kết quả cuối cùng $\mathbf{\bar{z}}_u^m$ (ký hiệu có thanh ngang trên đầu biểu thị giá trị cuối cùng).
+* $\frac{1}{\sqrt{|\mathcal{N}\sb u^m| |\mathcal{N}\sb i^m|}}$: Một hệ số chuẩn hóa (Normalization factor - giúp các con số không bị quá lớn), tính dựa trên số lượng hàng xóm của $u$ và $i$.
+* **Ý nghĩa công thức:** Sở thích của người dùng được xác định bằng cách cộng gộp trung bình các đặc điểm ($\mathbf{e}\sb i^m$) của những sản phẩm mà họ (hoặc những người giống họ) đã tương tác trên đồ thị mới sinh ra. Vector sau đó được truyền tiếp qua mạng để thành kết quả cuối cùng $\mathbf{\bar{z}}\sb u^m$ (ký hiệu có thanh ngang trên đầu biểu thị giá trị cuối cùng).
 
 **Hàm mất mát tương phản (Cross-Modal Contrastive Loss - InfoNCE Loss):**
-$$\mathcal{L}_{cl}^{user} = \sum_{m_1 \in \mathcal{M}} \sum_{m_2 \in \mathcal{M}, m_2 \neq m_1} \sum_{u \in \mathcal{U}} -\log \frac{\exp(s(\mathbf{\bar{z}}_u^{m_1}, \mathbf{\bar{z}}_u^{m_2})/\tau)}{\sum_{v \in \mathcal{U}} \exp(s(\mathbf{\bar{z}}_u^{m_1}, \mathbf{\bar{z}}_v^{m_2})/\tau)}$$
-* $m_1, m_2$: Hai loại phương thức khác nhau (ví dụ $m_1$ là hình ảnh, $m_2$ là âm thanh).
+$$\mathcal{L}\sb {cl}^{user} = \sum\sb {m\sb 1 \in \mathcal{M}} \sum\sb {m\sb 2 \in \mathcal{M}, m\sb 2 \neq m\sb 1} \sum\sb {u \in \mathcal{U}} -\log \frac{\exp(s(\mathbf{\bar{z}}\sb u^{m\sb 1}, \mathbf{\bar{z}}\sb u^{m\sb 2})/\tau)}{\sum\sb {v \in \mathcal{U}} \exp(s(\mathbf{\bar{z}}\sb u^{m\sb 1}, \mathbf{\bar{z}}\sb v^{m\sb 2})/\tau)}$$
+* $m\sb 1, m\sb 2$: Hai loại phương thức khác nhau (ví dụ $m\sb 1$ là hình ảnh, $m\sb 2$ là âm thanh).
 * $\mathcal{U}$: Tập hợp tất cả người dùng (Users), $u$ là người dùng đang xét, $v$ là một người dùng bất kỳ khác để so sánh.
 * $s(a, b)$: Hàm tính độ tương đồng (Similarity score - đo xem hai vector $a$ và $b$ giống nhau mức nào).
 * $\exp()$: Hàm mũ (Exponential function $e^x$, giúp khuếch đại sự khác biệt).
 * $\tau$ (Tau): Tham số nhiệt độ (Temperature parameter - một con số nhỏ giúp tinh chỉnh độ nhạy của phép chia).
 * $\log$: Hàm logarit.
-* **Ý nghĩa công thức:** Tử số tính độ giống nhau về sở thích của cùng **một người dùng $u$** nhưng trên 2 phương diện khác nhau ($m_1$ và $m_2$). Mẫu số tính độ giống nhau giữa người dùng $u$ trên phương diện $m_1$ với **tất cả người dùng khác $v$** trên phương diện $m_2$. Dấu trừ $-\log$ phía trước biến tỷ lệ này thành sai sót (Loss). Mô hình sẽ phải giảm thiểu Loss này, tức là ép buộc: Tỷ lệ (Sự giống nhau của chính mình / Sự giống nhau với người khác) phải càng lớn càng tốt. Tóm lại, biểu diễn của một người trên góc nhìn hình ảnh phải cực kỳ giống biểu diễn của chính người đó trên góc nhìn âm thanh, và khác biệt với người khác.
+* **Ý nghĩa công thức:** Tử số tính độ giống nhau về sở thích của cùng **một người dùng $u$** nhưng trên 2 phương diện khác nhau ($m\sb 1$ và $m\sb 2$). Mẫu số tính độ giống nhau giữa người dùng $u$ trên phương diện $m\sb 1$ với **tất cả người dùng khác $v$** trên phương diện $m\sb 2$. Dấu trừ $-\log$ phía trước biến tỷ lệ này thành sai sót (Loss). Mô hình sẽ phải giảm thiểu Loss này, tức là ép buộc: Tỷ lệ (Sự giống nhau của chính mình / Sự giống nhau với người khác) phải càng lớn càng tốt. Tóm lại, biểu diễn của một người trên góc nhìn hình ảnh phải cực kỳ giống biểu diễn của chính người đó trên góc nhìn âm thanh, và khác biệt với người khác.
 
 ---
 
@@ -128,17 +128,17 @@ $$\mathcal{L}_{cl}^{user} = \sum_{m_1 \in \mathcal{M}} \sum_{m_2 \in \mathcal{M}
 **Mô tả:** Gom tất cả kiến thức học được từ các loại phương thức (hình, chữ, âm thanh) lại làm một để đưa ra kết luận người dùng có mua/click vào sản phẩm không.
 
 **Công thức tích hợp (Aggregation):**
-$$\mathbf{h}_u = \sum_{m \in \mathcal{M}} \kappa_m \mathbf{\hat{z}}_u^m, \quad \mathbf{h}_i = \sum_{m \in \mathcal{M}} \kappa_m \mathbf{\hat{z}}_i^m$$
-* $\mathbf{h}_u$, $\mathbf{h}_i$: Biểu diễn tích hợp tổng thể (Tổng hợp tất cả phương thức) của User $u$ và Item $i$.
-* $\kappa_m$ (Kappa): Một trọng số (Weight) thể hiện mức độ quan trọng của phương thức $m$ (ví dụ: với sản phẩm này, hình ảnh quan trọng hơn chữ thì $\kappa_{hinhanh} > \kappa_{chu}$). Máy tính sẽ tự động học (Learning) giá trị này.
-* **Ý nghĩa công thức:** Biểu diễn cuối cùng của User/Item bằng tổng hợp các biểu diễn từ mỗi phương thức, nhân với độ quan trọng của phương thức đó. Sau đó, nó đi qua mạng lưới (GCN) một lần nữa để ra bản chốt $\mathbf{\bar{h}}_u$ và $\mathbf{\bar{h}}_i$.
+$$\mathbf{h}\sb u = \sum\sb {m \in \mathcal{M}} \kappa\sb m \mathbf{\hat{z}}\sb u^m, \quad \mathbf{h}\sb i = \sum\sb {m \in \mathcal{M}} \kappa\sb m \mathbf{\hat{z}}\sb i^m$$
+* $\mathbf{h}\sb u$, $\mathbf{h}\sb i$: Biểu diễn tích hợp tổng thể (Tổng hợp tất cả phương thức) của User $u$ và Item $i$.
+* $\kappa\sb m$ (Kappa): Một trọng số (Weight) thể hiện mức độ quan trọng của phương thức $m$ (ví dụ: với sản phẩm này, hình ảnh quan trọng hơn chữ thì $\kappa\sb {hinhanh} > \kappa\sb {chu}$). Máy tính sẽ tự động học (Learning) giá trị này.
+* **Ý nghĩa công thức:** Biểu diễn cuối cùng của User/Item bằng tổng hợp các biểu diễn từ mỗi phương thức, nhân với độ quan trọng của phương thức đó. Sau đó, nó đi qua mạng lưới (GCN) một lần nữa để ra bản chốt $\mathbf{\bar{h}}\sb u$ và $\mathbf{\bar{h}}\sb i$.
 
 **Dự đoán (Prediction):**
-$$\hat{y}_{u,i} = \mathbf{\bar{h}}_u^T \cdot \mathbf{\bar{h}}_i$$
-* $\hat{y}_{u,i}$ (y mũ): Điểm số dự đoán cuối cùng (Predictive score) xem người dùng $u$ có khả năng tương tác với item $i$ cao hay thấp.
-* $\mathbf{\bar{h}}_u^T$: Ký hiệu $T$ ở trên cùng (Transpose - chuyển vị) dùng để đổi vector thành hàng ngang để có thể nhân ma trận.
+$$\hat{y}\sb {u,i} = \mathbf{\bar{h}}\sb u^T \cdot \mathbf{\bar{h}}\sb i$$
+* $\hat{y}\sb {u,i}$ (y mũ): Điểm số dự đoán cuối cùng (Predictive score) xem người dùng $u$ có khả năng tương tác với item $i$ cao hay thấp.
+* $\mathbf{\bar{h}}\sb u^T$: Ký hiệu $T$ ở trên cùng (Transpose - chuyển vị) dùng để đổi vector thành hàng ngang để có thể nhân ma trận.
 * $\cdot$: Phép nhân vô hướng (Dot product).
-* **Ý nghĩa công thức:** Điểm dự đoán bằng sự tương đồng (tích vô hướng) giữa vector sở thích tổng hợp của người dùng ($\mathbf{\bar{h}}_u$) và vector đặc điểm tổng hợp của sản phẩm ($\mathbf{\bar{h}}_i$). Điểm số càng cao, khả năng gợi ý sản phẩm đó thành công càng lớn.
+* **Ý nghĩa công thức:** Điểm dự đoán bằng sự tương đồng (tích vô hướng) giữa vector sở thích tổng hợp của người dùng ($\mathbf{\bar{h}}\sb u$) và vector đặc điểm tổng hợp của sản phẩm ($\mathbf{\bar{h}}\sb i$). Điểm số càng cao, khả năng gợi ý sản phẩm đó thành công càng lớn.
 
 ---
 
