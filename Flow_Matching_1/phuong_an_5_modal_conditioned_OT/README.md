@@ -18,41 +18,20 @@ Folder này là **Giai đoạn C**: đóng gói theo đúng quy trình `Folder_B
 ## Nội dung folder
 
 - **`DiffMM-ModalOT/`** — bản fork đầy đủ của [HKUDS/DiffMM](https://github.com/HKUDS/DiffMM) đã có sẵn
-  patch Phương án 5 áp trực tiếp vào code (`Params.py`, `Model.py`, `Main.py`, `DataHandler.py`). Đây
-  là folder cần **đẩy (push) lên GitHub riêng của bạn** — xem hướng dẫn bên dưới. Bản sao độc lập (git
-  repo riêng, đã commit, nằm ngoài project) ở `E:\NAM_BA\DiffMM-ModalOT` — **chưa push** vì chưa có link
-  GitHub repo trống nào được cung cấp.
-- **`DiffMM_PhuongAn5_ModalOT_Colab.ipynb`** — notebook chạy trên Google Colab: clone code từ repo
-  GitHub *của bạn*, tự tải dữ liệu từ Google Drive, xác minh patch đúng, chạy huấn luyện, xuất bảng chỉ
-  số tốt nhất kèm tên dataset, và **tự động xuất + tải về file PDF** của bảng kết quả đó ngay khi chạy
-  xong.
+  patch Phương án 5 áp trực tiếp vào code (`Params.py`, `Model.py`, `Main.py`, `DataHandler.py`). Bản
+  sao độc lập (git repo riêng, nằm ngoài project) ở `E:\NAM_BA\DiffMM-ModalOT` đã được push lên
+  [thyelmot/DiffMM_M_C_OT](https://github.com/thyelmot/DiffMM_M_C_OT).
+- **`DiffMM_PhuongAn5_ModalOT_Colab.ipynb`** — notebook chạy trên Google Colab, **Cell 1 đã điền sẵn**
+  `GITHUB_REPO_URL` + `GDRIVE_LINK` ở trên: clone code từ repo GitHub, tự tải dữ liệu từ Google Drive,
+  xác minh patch đúng, chạy huấn luyện, xuất bảng chỉ số tốt nhất kèm tên dataset, và **tự động xuất +
+  tải về file PDF** của bảng kết quả đó ngay khi chạy xong.
 
-## Bước 1 — Đẩy `DiffMM-ModalOT/` lên GitHub riêng của bạn
-
-Bản sao đã sẵn sàng (đã `git init` + commit) nằm ngoài mọi repo khác tại:
-
-```
-E:\NAM_BA\DiffMM-ModalOT
-```
-
-1. Vào https://github.com/new, tạo một repo mới, **để trống, không tick "Initialize with README"**.
-2. Chạy các lệnh sau (thay `<your-username>` và `<repo-name>`):
-
-```bash
-cd E:\NAM_BA\DiffMM-ModalOT
-git remote add origin https://github.com/<your-username>/<repo-name>.git
-git branch -M main
-git push -u origin main
-```
-
-3. Copy URL repo — dán vào `GITHUB_REPO_URL` ở Cell 1 của notebook.
-
-## Bước 2 — Chạy notebook trên Colab
+## Bước 1 — Chạy notebook trên Colab
 
 1. Mở Google Colab → `File > Upload notebook` → chọn `DiffMM_PhuongAn5_ModalOT_Colab.ipynb`.
 2. `Runtime > Change runtime type > Hardware accelerator > GPU`.
-3. Chỉ chỉnh **Cell 1**: `GITHUB_REPO_URL`, link Google Drive chứa dữ liệu, `DATASET_NAME`,
-   `NUM_EPOCHS`, và **`KAPPA`** — rồi `Runtime > Run all`.
+3. Cell 1 đã điền sẵn repo + dữ liệu — chỉ cần kiểm tra `DATASET_NAME` (`tiktok` mặc định),
+   `NUM_EPOCHS`, và **`KAPPA`** (khuyến nghị chạy `0.0` trước) — rồi `Runtime > Run all`.
 
 `KAPPA=0.0` (mặc định) tương đương Phương án 1 — khuyến nghị chạy `KAPPA=0.0` trước để xác nhận pipeline
 chạy đúng với dữ liệu thật, rồi mới tăng dần `KAPPA` (bắt đầu `0.1`-`0.5`) để bật hiệu ứng điều
@@ -75,13 +54,13 @@ Xem bảng "Bẫy môi trường đã biết" trong `Folder_Base/HUONG_DAN_XAY_D
       rỗng, đúng định dạng) và thất bại (repo không có patch → Cell 5 báo lỗi rõ ràng; script chính lỗi
       thật → Cell 6 báo lỗi kèm log đầy đủ).
 - [x] Git repo độc lập cho `DiffMM-ModalOT` được tạo ở vị trí **ngoài** mọi repo khác
-      (`E:\NAM_BA\DiffMM-ModalOT`, xác nhận bằng `git rev-parse --show-toplevel`).
+      (`E:\NAM_BA\DiffMM-ModalOT`, xác nhận bằng `git rev-parse --show-toplevel`), đã push lên
+      [thyelmot/DiffMM_M_C_OT](https://github.com/thyelmot/DiffMM_M_C_OT).
+- [x] Cell 1 notebook đã điền sẵn `GITHUB_REPO_URL` + `GDRIVE_LINK` do người dùng cung cấp.
 
 Phần chưa/không thể kiểm chứng ở đây (do môi trường dev không có GPU/dữ liệu thật):
 - Chạy full training thật trên GPU với dữ liệu thật (Recall/NDCG thật).
 - Chi phí bộ nhớ GPU thực tế khi giữ đồng thời nhiều mảng `(batch, T, num_items)` — nếu tràn bộ nhớ,
   thử giảm `--batch`.
-- Bước `git push` lên GitHub thật (chưa có link repo trống nào được cung cấp — làm theo Bước 1 ở trên
-  khi sẵn sàng).
 
 Nếu gặp lỗi khi chạy thật trên Colab, gửi lại log để debug tiếp.
