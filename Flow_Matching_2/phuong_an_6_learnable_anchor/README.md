@@ -21,39 +21,19 @@ Folder này là **Giai đoạn C**: đóng gói theo đúng quy trình `Folder_B
 ## Nội dung folder
 
 - **`DiffMM-AnchorOT/`** — bản fork đầy đủ của [HKUDS/DiffMM](https://github.com/HKUDS/DiffMM) đã có sẵn
-  patch Phương án 6 áp trực tiếp vào code. Bản sao độc lập (git repo riêng, đã commit, nằm ngoài project)
-  ở `E:\NAM_BA\DiffMM-AnchorOT` — **chưa push** vì chưa có link GitHub repo trống nào được cung cấp.
-- **`DiffMM_PhuongAn6_AnchorOT_Colab.ipynb`** — notebook chạy trên Google Colab: clone code từ repo
-  GitHub *của bạn*, tự tải dữ liệu từ Google Drive, xác minh patch đúng, chạy huấn luyện, xuất bảng chỉ
-  số tốt nhất kèm tên dataset, và **tự động xuất + tải về file PDF** của bảng kết quả đó ngay khi chạy
-  xong.
+  patch Phương án 6 áp trực tiếp vào code. Bản sao độc lập ở `E:\NAM_BA\DiffMM-AnchorOT` đã được push lên
+  [thyelmot/DiffMM_6](https://github.com/thyelmot/DiffMM_6).
+- **`DiffMM_PhuongAn6_AnchorOT_Colab.ipynb`** — notebook chạy trên Google Colab, **Cell 1 đã điền sẵn**
+  `GITHUB_REPO_URL` + `GDRIVE_LINK` ở trên: clone code từ repo GitHub, tự tải dữ liệu từ Google Drive,
+  xác minh patch đúng, chạy huấn luyện, xuất bảng chỉ số tốt nhất kèm tên dataset, và **tự động xuất +
+  tải về file PDF** của bảng kết quả đó ngay khi chạy xong.
 
-## Bước 1 — Đẩy `DiffMM-AnchorOT/` lên GitHub riêng của bạn
-
-Bản sao đã sẵn sàng (đã `git init` + commit) nằm ngoài mọi repo khác tại:
-
-```
-E:\NAM_BA\DiffMM-AnchorOT
-```
-
-1. Vào https://github.com/new, tạo một repo mới, **để trống, không tick "Initialize with README"**.
-2. Chạy các lệnh sau (thay `<your-username>` và `<repo-name>`):
-
-```bash
-cd E:\NAM_BA\DiffMM-AnchorOT
-git remote add origin https://github.com/<your-username>/<repo-name>.git
-git branch -M main
-git push -u origin main
-```
-
-3. Copy URL repo — dán vào `GITHUB_REPO_URL` ở Cell 1 của notebook.
-
-## Bước 2 — Chạy notebook trên Colab
+## Bước 1 — Chạy notebook trên Colab
 
 1. Mở Google Colab → `File > Upload notebook` → chọn `DiffMM_PhuongAn6_AnchorOT_Colab.ipynb`.
 2. `Runtime > Change runtime type > Hardware accelerator > GPU`.
-3. Chỉ chỉnh **Cell 1**: `GITHUB_REPO_URL`, link Google Drive chứa dữ liệu, `DATASET_NAME`,
-   `NUM_EPOCHS`, và **`ANCHOR_W`** — rồi `Runtime > Run all`.
+3. Cell 1 đã điền sẵn repo + dữ liệu — chỉ cần kiểm tra `DATASET_NAME` (`tiktok` mặc định),
+   `NUM_EPOCHS`, và **`ANCHOR_W`** (khuyến nghị chạy `0.0` trước) — rồi `Runtime > Run all`.
 
 `ANCHOR_W=0.0` (mặc định) tương đương Phương án 3 — khuyến nghị chạy `ANCHOR_W=0.0` trước để xác nhận
 pipeline chạy đúng với dữ liệu thật, rồi mới tăng dần `ANCHOR_W` (bắt đầu `1.0`-`5.0`) để bật hiệu ứng
@@ -78,14 +58,14 @@ Xem bảng "Bẫy môi trường đã biết" trong `Folder_Base/HUONG_DAN_XAY_D
       rỗng) và thất bại (repo không có patch → Cell 5 báo lỗi rõ ràng; script chính lỗi thật → Cell 6
       báo lỗi kèm log đầy đủ).
 - [x] Git repo độc lập cho `DiffMM-AnchorOT` được tạo ở vị trí **ngoài** mọi repo khác
-      (`E:\NAM_BA\DiffMM-AnchorOT`, xác nhận bằng `git rev-parse --show-toplevel`).
+      (`E:\NAM_BA\DiffMM-AnchorOT`, xác nhận bằng `git rev-parse --show-toplevel`), đã push lên
+      [thyelmot/DiffMM_6](https://github.com/thyelmot/DiffMM_6).
+- [x] Cell 1 notebook đã điền sẵn `GITHUB_REPO_URL` + `GDRIVE_LINK` do người dùng cung cấp.
 - [x] README bản fork có đối chiếu công thức gốc/mới, rõ file/hàm bị sửa.
 
 Phần chưa/không thể kiểm chứng ở đây (do môi trường dev không có GPU/dữ liệu thật):
 - Chạy full training thật trên GPU với dữ liệu thật (Recall/NDCG thật) — đặc biệt là liệu điểm neo thô
   `α_l` có thực sự cải thiện chất lượng gợi ý hay không, đây là câu hỏi mở duy nhất còn lại (rủi ro
   *thực nghiệm*, không còn là rủi ro toán học/kỹ thuật — xem mục 4 bản kế hoạch chi tiết).
-- Bước `git push` lên GitHub thật (chưa có link repo trống nào được cung cấp — làm theo Bước 1 ở trên
-  khi sẵn sàng).
 
 Nếu gặp lỗi khi chạy thật trên Colab, gửi lại log để debug tiếp.
