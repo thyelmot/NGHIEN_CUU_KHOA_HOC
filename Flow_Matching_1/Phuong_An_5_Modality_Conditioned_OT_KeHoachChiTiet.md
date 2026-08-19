@@ -237,8 +237,16 @@ và sửa 1 lỗi thật (gộp nhầm hệ số `tau` với `tau*x_start`, làm
 và làm sai `p_mean_variance` một cách âm thầm) — xem chi tiết ở README của folder đó. **Chưa** chạy với
 dữ liệu thật/mạng `Denoise` thật/GPU — đó là phạm vi của Giai đoạn C.
 
-**Giai đoạn C — Đóng gói theo `Folder_Base` (chỉ làm sau khi Giai đoạn A+B đã có kết quả sơ bộ hợp
-lý):** lúc này mới áp dụng đầy đủ quy trình 8 bước như PA1-4.
+**Giai đoạn C — Đóng gói theo `Folder_Base` — ✅ ĐÃ HOÀN THÀNH, xem
+[`phuong_an_5_modal_conditioned_OT/`](phuong_an_5_modal_conditioned_OT/README.md):** đã áp dụng đầy đủ
+quy trình 8 bước như PA1-4 — fork `DiffMM-ModalOT` (git repo độc lập, đã commit, nằm ngoài mọi repo
+khác tại `E:\NAM_BA\DiffMM-ModalOT`, **chưa push** vì chưa có link GitHub repo trống được cung cấp),
+notebook `DiffMM_PhuongAn5_ModalOT_Colab.ipynb` (build từ `Folder_Base/Colab_Template.ipynb`, có sẵn
+xuất PDF tự động), đã dry-run cell-theo-cell cả nhánh thành công lẫn nhánh lỗi (patch sai bị Cell 5
+chặn đúng, script lỗi thật bị Cell 6 chặn đúng kèm log), đã xác nhận file PDF xuất ra là thật (không
+rỗng, đúng định dạng). **Chưa** chạy thật trên GPU với dữ liệu thật — cần người dùng cung cấp link
+GitHub repo trống + link Google Drive dữ liệu để hoàn tất Bước 1/7, rồi tự chạy `Runtime > Run all`
+trên Colab.
 
 ---
 
@@ -321,11 +329,13 @@ viết đủ thân hàm nên làm ở Giai đoạn A/B của mục 5, có kiểm
 | Vai trò MSI (D3) | Giữ nguyên | Giữ nguyên | Giữ nguyên | Giữ nguyên | **Loại bỏ, thay bằng path** |
 | Kiểm chứng gradient số học | Không cần (dùng lại công thức đã biết đúng) | Không cần | Không cần | Không cần | **Bắt buộc — ✅ đã làm xong (Giai đoạn A)** |
 | Hồi quy trên patch thật (κ=0 ≡ PA1) | — | — | — | — | **✅ đã làm xong (Giai đoạn B)** |
-| Có thể dùng `Folder_Base` ngay | Có | Có | Có | Có | **Chưa — cần Giai đoạn C (mục 5)** |
+| Có thể dùng `Folder_Base` ngay | Có | Có | Có | Có | **✅ đã đóng gói xong (Giai đoạn C)** |
 | Độ khó (kế hoạch gốc) | ★☆☆☆☆ | ★★★☆☆ | ★★★★☆ | ★★☆☆☆ | ★★★★★ |
 
 Phương án 5 là hướng đi **hợp lý về mặt lý thuyết** (đã chứng minh điều kiện biên đúng, đã kiểm chứng
 gradient bằng số học ở Giai đoạn A, và đã kiểm chứng hồi quy trên patch thật ở Giai đoạn B — `κ=0` trùng
-khít tuyệt đối Phương án 1) nhưng **chưa sẵn sàng để đóng gói thành folder chạy Colab ngay** như PA1-4 —
-chưa chạy với dữ liệu thật/mạng thật/GPU, chưa có số liệu Recall/NDCG. Giai đoạn C (đóng gói
-`Folder_Base`, chạy thật) là bước hợp lý tiếp theo nếu muốn theo đuổi Phương án 5 nghiêm túc.
+khít tuyệt đối Phương án 1) và **đã được đóng gói đầy đủ thành folder chạy Colab** ở Giai đoạn C
+([`phuong_an_5_modal_conditioned_OT/`](phuong_an_5_modal_conditioned_OT/README.md)) — nhưng vẫn **chưa
+chạy với dữ liệu thật/mạng thật/GPU**, chưa có số liệu Recall/NDCG nào. Bước hợp lý tiếp theo: cung cấp
+link GitHub repo trống + link Google Drive dữ liệu để đẩy code lên và chạy thật trên Colab, bắt đầu từ
+`κ=0` (đối chiếu với kết quả Phương án 1 đã có) trước khi thử `κ>0`.
