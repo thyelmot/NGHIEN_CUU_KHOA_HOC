@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+# TODO: thêm pattern bỏ qua thư mục dữ liệu nặng của thuật toán này, ví dụ:
+# Datasets/*/
+# !Datasets/README.md
