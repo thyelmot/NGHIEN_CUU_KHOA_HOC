@@ -224,10 +224,18 @@ bản đã thử, gồm cả 2 trường hợp biên số học quan trọng nh�
 gây bão hoà `clamp`), và kiểm tra ở quy mô gần thực tế (batch=64, 500 item). Xem chi tiết đầy đủ và
 giới hạn của những gì ĐÃ/CHƯA kiểm chứng ở README của folder đó.
 
-**Giai đoạn B — Patch tối thiểu, có công tắc bật/tắt (`enable_modal_path=False` mặc định):**
-Viết `GaussianDiffusionModalOT(GaussianDiffusionCFM)` (kế thừa từ Phương án 2 — không phải từ
-`GaussianDiffusion` gốc, vì cần khung CFM đã tổng quát hóa), nhưng **mặc định `κ=0`** (tương đương
-PA1) để có thể merge vào codebase mà không phá vỡ hành vi đã kiểm chứng, rồi bật dần `κ>0` để so sánh.
+**Giai đoạn B — Patch tối thiểu, có công tắc bật/tắt (`κ=0` mặc định) — ✅ ĐÃ HOÀN THÀNH, xem
+[`Phuong_An_5_GiaiDoanB_PatchThat/`](Phuong_An_5_GiaiDoanB_PatchThat/README.md):**
+Đã viết `GaussianDiffusionModalOT` patch thẳng vào bản clone mới nhất của DiffMM (kế thừa trực tiếp
+`GaussianDiffusion` gốc thay vì `GaussianDiffusionCFM` — lý do: `__init__` ở đây bỏ qua hoàn toàn khung
+VP-style của lớp cha giống PA1/3/4, nên kế thừa từ `GaussianDiffusionCFM` không tái sử dụng được gì về
+code, công thức CFM vẫn được tái dùng ở mức đại số). Mặc định `κ=0` trong `Params.py` (tương đương PA1)
+để merge an toàn. **Đã kiểm chứng bằng hồi quy trực tiếp trên `Model.py` thật** (không phải bản tách rời
+như Giai đoạn A): `κ=0` cho `tau, sigma, cfm_weight` trùng khít tuyệt đối Phương án 1/2/3; `κ>0` không
+NaN/Inf ở mọi kịch bản biên đã thử (user rỗng, κ rất lớn, quy mô gần thực tế). Quá trình này phát hiện
+và sửa 1 lỗi thật (gộp nhầm hệ số `tau` với `tau*x_start`, làm sai trọng số CFM tại toạ độ `x_start=0`
+và làm sai `p_mean_variance` một cách âm thầm) — xem chi tiết ở README của folder đó. **Chưa** chạy với
+dữ liệu thật/mạng `Denoise` thật/GPU — đó là phạm vi của Giai đoạn C.
 
 **Giai đoạn C — Đóng gói theo `Folder_Base` (chỉ làm sau khi Giai đoạn A+B đã có kết quả sơ bộ hợp
 lý):** lúc này mới áp dụng đầy đủ quy trình 8 bước như PA1-4.
@@ -292,10 +300,14 @@ viết đủ thân hàm nên làm ở Giai đoạn A/B của mục 5, có kiểm
   thực tế — có thể làm chậm đáng kể vòng lặp D7 (Multi-Task Training) so với PA1-4, ngược lại hoàn
   toàn với mục tiêu tăng tốc của PA3/PA4.
 - ~~Chưa kiểm chứng gradient bằng số học~~ — **✅ đã xong**, xem
-  [`Phuong_An_5_GiaiDoanA_GradCheck/`](Phuong_An_5_GiaiDoanA_GradCheck/README.md). Câu hỏi mở còn lại
-  là liệu gradient "đúng về công thức" này có thực sự tạo ra tín hiệu học **hữu ích** khi ghép vào toàn
-  bộ pipeline thật hay không — đó là việc của Giai đoạn B (patch có công tắc bật/tắt) trở đi, Giai đoạn
-  A chỉ đảm bảo công thức không sai về mặt toán học.
+  [`Phuong_An_5_GiaiDoanA_GradCheck/`](Phuong_An_5_GiaiDoanA_GradCheck/README.md).
+- ~~Chưa patch vào codebase thật, chưa hồi quy với PA1~~ — **✅ đã xong**, xem
+  [`Phuong_An_5_GiaiDoanB_PatchThat/`](Phuong_An_5_GiaiDoanB_PatchThat/README.md). Quá trình này phát
+  hiện 1 lỗi thật (gộp nhầm hệ số `tau` với `tau*x_start`) mà Giai đoạn A không bắt được — minh chứng cụ
+  thể rằng "gradient đúng về công thức" (Giai đoạn A) và "công thức khớp với Theorem 3/PA1 khi κ=0"
+  (Giai đoạn B) là 2 lớp kiểm chứng khác nhau, cả hai đều cần thiết. Câu hỏi mở còn lại: liệu tín hiệu
+  học có thực sự **hữu ích** (Recall/NDCG) khi chạy với dữ liệu thật trên GPU hay không — đó là phạm vi
+  của Giai đoạn C.
 
 ---
 
@@ -308,10 +320,12 @@ viết đủ thân hàm nên làm ở Giai đoạn A/B của mục 5, có kiểm
 | Cần đổi chữ ký hàm | Không | Không | Không | Không | **Có — thay đổi kiến trúc** |
 | Vai trò MSI (D3) | Giữ nguyên | Giữ nguyên | Giữ nguyên | Giữ nguyên | **Loại bỏ, thay bằng path** |
 | Kiểm chứng gradient số học | Không cần (dùng lại công thức đã biết đúng) | Không cần | Không cần | Không cần | **Bắt buộc — ✅ đã làm xong (Giai đoạn A)** |
-| Có thể dùng `Folder_Base` ngay | Có | Có | Có | Có | **Không — cần Giai đoạn A/B trước (mục 5)** |
+| Hồi quy trên patch thật (κ=0 ≡ PA1) | — | — | — | — | **✅ đã làm xong (Giai đoạn B)** |
+| Có thể dùng `Folder_Base` ngay | Có | Có | Có | Có | **Chưa — cần Giai đoạn C (mục 5)** |
 | Độ khó (kế hoạch gốc) | ★☆☆☆☆ | ★★★☆☆ | ★★★★☆ | ★★☆☆☆ | ★★★★★ |
 
 Phương án 5 là hướng đi **hợp lý về mặt lý thuyết** (đã chứng minh điều kiện biên đúng, đã kiểm chứng
-số học không NaN/Inf sau khi vá đúng kỹ thuật clip đã biết) nhưng **chưa sẵn sàng để đóng gói thành
-folder chạy Colab ngay** như PA1-4 — cần thêm Giai đoạn A (kiểm tra gradient số học trên dữ liệu giả
-lập) trước. Đây là bước hợp lý tiếp theo nếu muốn theo đuổi Phương án 5 nghiêm túc.
+gradient bằng số học ở Giai đoạn A, và đã kiểm chứng hồi quy trên patch thật ở Giai đoạn B — `κ=0` trùng
+khít tuyệt đối Phương án 1) nhưng **chưa sẵn sàng để đóng gói thành folder chạy Colab ngay** như PA1-4 —
+chưa chạy với dữ liệu thật/mạng thật/GPU, chưa có số liệu Recall/NDCG. Giai đoạn C (đóng gói
+`Folder_Base`, chạy thật) là bước hợp lý tiếp theo nếu muốn theo đuổi Phương án 5 nghiêm túc.
