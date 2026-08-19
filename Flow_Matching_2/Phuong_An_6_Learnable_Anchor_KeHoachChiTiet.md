@@ -250,8 +250,14 @@ làm lại Test 1-4 ở mục 4 với `τ(t;u,i)` thay vì `s(t)` trước khi t
   mọi `anchor_w` (CT-6.7 trên code thật); `anchor_w>0` không NaN/Inf ở mọi kịch bản biên đã thử. Không
   phát hiện lỗi nào trong quá trình patch (khác Phương án 5) — nhờ đã derive kỹ ở Giai đoạn A trước khi
   viết code. **Chưa** chạy với dữ liệu thật/mạng `Denoise` thật/GPU — đó là phạm vi của Giai đoạn C.
-- **Giai đoạn C (đóng gói `Folder_Base`):** chỉ làm sau khi được xác nhận — tạo repo GitHub riêng,
-  notebook Colab, theo đúng quy trình 8 bước đã dùng cho PA1-5.
+- **Giai đoạn C (đóng gói `Folder_Base`) — ✅ ĐÃ HOÀN THÀNH, xem
+  [`phuong_an_6_learnable_anchor/`](phuong_an_6_learnable_anchor/README.md):** đã áp dụng đầy đủ quy
+  trình 8 bước như PA1-5 — fork `DiffMM-AnchorOT` (git repo độc lập, đã commit, nằm ngoài mọi repo khác
+  tại `E:\NAM_BA\DiffMM-AnchorOT`, **chưa push** vì chưa có link GitHub repo trống được cung cấp),
+  notebook `DiffMM_PhuongAn6_AnchorOT_Colab.ipynb` (build từ `Folder_Base/Colab_Template.ipynb`, có sẵn
+  xuất PDF tự động), đã dry-run cell-theo-cell cả nhánh thành công lẫn nhánh lỗi. **Chưa** chạy thật
+  trên GPU với dữ liệu thật — cần người dùng cung cấp link GitHub repo trống + link Google Drive dữ liệu
+  để hoàn tất, rồi tự chạy `Runtime > Run all` trên Colab.
 
 **Đề xuất chưa nên làm ngay:** như đã nêu ở mục 6 bản kế hoạch tổng, nên chạy Phương án 8 (quét
 `num_sample_steps`, gần như miễn phí) trước, rồi mới đầu tư vào Giai đoạn B của Phương án 6.

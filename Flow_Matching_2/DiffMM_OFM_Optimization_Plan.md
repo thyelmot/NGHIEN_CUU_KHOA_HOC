@@ -84,7 +84,7 @@ có sẵn α₀ thật, không sinh α₀ từ hư vô):
 ## 5. Các phương án tối ưu khả thi (đánh số tiếp theo PA1-5, xếp theo độ ưu tiên)
 
 ### 🟢 Phương án 6 — Điểm neo thô học được (Learnable Coarse Anchor) cho tâm khởi tạo nhiễu — ✅ Giai
-đoạn A + B (kiểm chứng công thức + patch thật, hồi quy trùng khít PA3) đã hoàn thành, xem
+đoạn A + B + C (kiểm chứng công thức + patch thật + đóng gói Folder_Base) đã hoàn thành, xem
 [`Phuong_An_6_Learnable_Anchor_KeHoachChiTiet.md`](Phuong_An_6_Learnable_Anchor_KeHoachChiTiet.md)
 
 - **Vị trí áp dụng:** D1 (Forward Diffusion) — cách xây dựng αₜ từ α₀.
