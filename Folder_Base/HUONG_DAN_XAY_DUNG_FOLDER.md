@@ -33,7 +33,7 @@ dán 2-3 link (repo GitHub + Google Drive) — **mà không cần vòng lặp de
 │   ├── README.md                           # Giải thích patch: file/hàm nào đổi, đối chiếu công thức
 │   ├── <toàn bộ source code gốc>           # KHÔNG đoán — tải thật từ repo GitHub gốc (xem Bước 1)
 │   └── ... (chỉ sửa đúng phần patch chỉ định, giữ nguyên mọi thứ khác)
-└── <Ten>_Colab.ipynb                       # Notebook chạy trên Colab (7 cell chuẩn, xem Bước 6)
+└── <Ten>_Colab.ipynb                       # Notebook chạy trên Colab (7 cell chuẩn + 1 cell Optuna tuỳ chọn, xem Bước 6)
 ```
 
 **Quy tắc đặt vị trí `<TenRepo>-<TenPhuongAn>/` — RẤT QUAN TRỌNG:**
@@ -83,6 +83,27 @@ Nguyên tắc: **thêm, không sửa đè** khi có thể (ví dụ thêm 1 clas
 Với mỗi hàm định override, tự hỏi: "Có ràng buộc toán học nào của code gốc mà công thức mới không còn
 thoả mãn không?" (bài học từ Phương án 1: code DDPM gốc ràng buộc `mu² + sigma² = 1`, đường OT không
 còn ràng buộc này, nên không thể chỉ đổi 1 hàm — phải đổi cả `q_sample`, `p_mean_variance`, và `SNR`).
+
+### Bước 2b — Mẫu patch tuỳ chọn: Early stopping (dừng sớm)
+
+Không bắt buộc, nhưng khuyến nghị thêm vào mọi bản fork mới (rẻ, không ảnh hưởng phần còn lại) để tiết
+kiệm thời gian chạy khi quét nhiều cấu hình hyperparameter (đặc biệt hữu ích khi dùng cùng với Cell 8 —
+Optuna — của `Colab_Template.ipynb`, mục 6). Đã kiểm chứng thật trong Phương án 7 (bản `phuong_an_7_tvs`).
+
+**`Params.py`** — thêm 1 dòng:
+```python
+parser.add_argument('--patience', type=int, default=5, help='So epoch test khong cai thien Recall truoc khi dung som; 0 = tat')
+```
+
+**`Main.py`** — trong hàm `run()`, ngay sau khối cập nhật `recallMax`/`bestEpoch` ở mỗi lần test:
+```python
+if args.patience > 0 and (ep - bestEpoch >= args.patience):
+    log(f"Early stopping triggered at epoch {ep}! No improvement on Recall for {args.patience} epochs. Best epoch was {bestEpoch}.")
+    break
+```
+
+Sau khi thêm, nhớ nối `"--patience", str(PATIENCE)` vào `CLI_ARGS` ở Cell 6 của notebook (xem TODO đã
+có sẵn ở `Colab_Template.ipynb`) và khai báo `PATIENCE = 5` (hoặc `0` để tắt) ở Cell 1.
 
 ### Bước 3 — Áp patch thật + viết code
 
@@ -155,16 +176,33 @@ template đã được kiểm chứng kỹ và xử lý sẵn các lỗi môi tr
   tự động lấy tên phương án/dataset từ 2 cột này, không cần sửa gì thêm ở phần xuất PDF).
 - Các thư viện phụ trợ cần `pip install` thêm ở Cell 2 (kiểm tra `import` ở đầu mỗi file gốc —
   `matplotlib` dùng để xuất PDF ở Cell 7 đã có sẵn trên Colab, không cần thêm vào danh sách cài đặt).
+- `EPOCH_REGEX` ở Cell 7 (nếu định dạng dòng log `Test:` của script gốc khác định dạng chuẩn của
+  `makePrint` trong DiffMM — mặc định trong template đã khớp sẵn định dạng đó, thường không cần sửa).
+- (Tuỳ chọn) `trial.suggest_...` + `CLI_ARGS` bên trong `objective()` ở Cell 8 (Optuna) nếu muốn cung
+  cấp sẵn tính năng dò siêu tham số tự động cho phương án này — có thể bỏ qua, Cell 8 không bắt buộc.
 
-**Tính năng có sẵn, không cần code lại:** cuối Cell 7, notebook tự vẽ `result_df` (bảng chỉ số cao
-nhất) kèm tên dataset + tên phương án thành 1 trang PDF (`matplotlib`, không cần cài thêm thư viện),
-lưu file `KetQua_<dataset>.pdf`, và tự động tải file đó về máy qua trình duyệt (`google.colab.files.download`)
-ngay khi Cell 7 chạy xong. Chỉ hoạt động đúng khi Cell 5 (map kết quả) đã điền đủ 2 cột `"Dataset"` và
-`"Phương án"` trong `result_df` — nếu thiếu, PDF vẫn xuất được nhưng thiếu thông tin trong tiêu đề.
+**Tính năng có sẵn, không cần code lại:**
+- Cell 1: `USE_GDRIVE_MOUNT` — chuyển giữa tải công khai qua `gdown` (mặc định) và mount Drive cá nhân
+  (tránh lỗi "quota exceeded" khi link bị nhiều người tải) — Cell 4 đã xử lý sẵn cả 2 nhánh.
+- Cuối Cell 7, notebook tự vẽ `result_df` (bảng chỉ số cao nhất) kèm tên dataset + tên phương án thành 1
+  trang PDF (`matplotlib`, không cần cài thêm thư viện), lưu file `KetQua_<dataset>.pdf`, và tự động tải
+  file đó về máy qua trình duyệt (`google.colab.files.download`) ngay khi Cell 7 chạy xong. Chỉ hoạt
+  động đúng khi Cell 5 (map kết quả) đã điền đủ 2 cột `"Dataset"` và `"Phương án"` trong `result_df` —
+  nếu thiếu, PDF vẫn xuất được nhưng thiếu thông tin trong tiêu đề.
+- Cell 7 còn tự trích bảng chi tiết + vẽ biểu đồ Recall/NDCG/Precision biến thiên qua **từng epoch** đã
+  test (không chỉ epoch tốt nhất), xuất `BieuDo_<dataset>.pdf`, tự tải về — dùng `EPOCH_REGEX` khớp
+  định dạng `makePrint` chuẩn của DiffMM có sẵn; nếu không khớp dòng nào, tự bỏ qua phần này (không báo
+  lỗi, không chặn phần bảng/PDF chính).
+- Cell 8 (cuối notebook, **tuỳ chọn**): dò siêu tham số tự động bằng Optuna (Bayesian Optimization) —
+  chạy nhiều lượt huấn luyện ngắn với các bộ tham số khác nhau, báo bộ cho Recall cao nhất. Cần điền
+  TODO riêng cho từng phương án (tên + khoảng giá trị hyperparameter cần quét).
+- (Tuỳ chọn, cần patch thêm ở `Main.py`/`Params.py` — xem Bước 2b) Dừng sớm (`--patience`) nếu Recall
+  không cải thiện sau N epoch test — Cell 1/6 đã có sẵn chỗ để bật khi bản fork hỗ trợ.
 
 Sau khi điền xong, **chạy lại toàn bộ Bước 4 mục 4 (dry-run cell theo cell)** trên bản notebook cuối
-cùng trước khi bàn giao — với Cell 7, dry-run luôn cả phần xuất PDF (kiểm tra file `.pdf` thật sự được
-tạo ra, không rỗng) chứ không chỉ phần in bảng.
+cùng trước khi bàn giao — với Cell 7, dry-run luôn cả phần xuất PDF bảng lẫn PDF biểu đồ (kiểm tra cả 2
+file `.pdf` thật sự được tạo ra, không rỗng), và nếu dry-run cục bộ (ngoài Colab thật), nhớ tránh bẫy
+`plt.show()` treo script đã nêu ở mục 3 (`matplotlib.use("Agg")` trước khi import `pyplot`).
 
 ### Bước 7 — Điền sẵn Cell 1 nếu người dùng đã có link
 
@@ -179,8 +217,11 @@ Trước khi báo "xong" với người dùng, xác nhận đã làm **toàn b�
 - [ ] Patch biên dịch sạch (`py_compile`) trên bản mới nhất tải lại từ GitHub.
 - [ ] Nếu có công thức toán: đã dry-run số học, quét hết dải tham số, xác nhận không NaN/Inf.
 - [ ] Đã dry-run toàn bộ notebook cell-theo-cell, cả nhánh thành công lẫn nhánh lỗi.
-- [ ] Cell 7 đã dry-run cả phần xuất PDF — xác nhận file `.pdf` được tạo ra thật, không rỗng, tiêu đề
-      có đúng tên phương án + tên dataset (không phải giá trị mặc định/rỗng).
+- [ ] Cell 7 đã dry-run cả phần xuất PDF bảng kết quả VÀ PDF biểu đồ theo epoch — xác nhận cả 2 file
+      `.pdf` được tạo ra thật, không rỗng, tiêu đề có đúng tên phương án + tên dataset (không phải giá
+      trị mặc định/rỗng); nếu `EPOCH_REGEX` không khớp log, xác nhận cell tự bỏ qua phần biểu đồ mà
+      không báo lỗi (không bắt buộc biểu đồ phải xuất được, chỉ cần không crash).
+- [ ] (Nếu `USE_GDRIVE_MOUNT` được dùng) Đã dry-run cả 2 nhánh tải dữ liệu ở Cell 4.
 - [ ] Git repo độc lập được tạo ở vị trí **ngoài** mọi repo khác (đã tự kiểm bằng
       `git rev-parse --show-toplevel`).
 - [ ] README của bản fork có đối chiếu công thức gốc ↔ mới, rõ ràng file/hàm bị sửa.
@@ -207,6 +248,7 @@ Trước khi bàn giao, `grep` qua toàn bộ code đã patch (và cả phần c
 | Giả định entry point script luôn nằm ngay gốc thư mục vừa clone | Repo trên GitHub có thể bị lồng thêm 1-2 cấp thư mục (do người dùng push nhầm cả folder cha, hoặc kéo-thả qua giao diện web GitHub thay vì `git push`) | Dò tìm entry point script bằng `glob.glob(os.path.join(REPO_DIR, "**", "<ten_script>.py"), recursive=True)`, tự động điều chỉnh `REPO_DIR` nếu tìm thấy ở cấp sâu hơn |
 | Cell đọc file log/kết quả không kiểm tra file có tồn tại trước | Nếu cell chạy training chưa chạy xong (hoặc phiên Colab bị ngắt kết nối/reset giữa chừng), cell đọc kết quả sẽ báo `FileNotFoundError` khó hiểu | Luôn `assert os.path.exists(LOG_PATH)` với thông báo lỗi giải thích rõ nguyên nhân thường gặp trước khi mở file |
 | `parser.add_argument(..., type=bool)` trong Params/argparse | Trong Python argparse, `type=bool` chuyển đổi mọi chuỗi không rỗng thành `True` (kể cả truyền `--flag False` hay `--flag 0` vẫn là `True`), dễ gây bẫy khi tắt bật tham số từ CLI của Colab | Dùng `type=int` với giá trị `0` hoặc `1` ở CLI, rồi ép kiểu `bool(args.flag)` ở trong codebase để đảm bảo độ chính xác tuyệt đối |
+| `plt.show()` trong cell vẽ biểu đồ (Cell 7, phần xuất `BieuDo_*.pdf`) khi **dry-run cục bộ** ngoài Colab (Bước 4.4) | Trên Colab, backend matplotlib mặc định là inline nên `plt.show()` không chặn gì cả — nhưng khi extract cell ra chạy bằng Python thường (không phải notebook), backend GUI mặc định (vd TkAgg trên Windows) khiến `plt.show()` cố mở 1 cửa sổ và **treo script vô thời hạn**, không có thông báo lỗi nào cả (chỉ đứng im) | Trước khi dry-run cục bộ, gọi `matplotlib.use("Agg")` ngay sau khi `import matplotlib`, **trước** `import matplotlib.pyplot`. Không cần sửa gì trong chính notebook (Colab thật không bị ảnh hưởng) — đây là bẫy chỉ xảy ra khi tự kiểm chứng Bước 4.4, không phải bẫy khi người dùng cuối chạy thật |
 
 Mỗi khi phát hiện thêm 1 "bẫy môi trường" mới ở phương án sau này, **bổ sung ngay vào bảng này** để các
 phương án sau nữa không giẫm lại vết xe đổ.
@@ -233,7 +275,7 @@ phương án sau nữa không giẫm lại vết xe đổ.
 [ ] Patch biên dịch sạch (py_compile)
 [ ] Đã dry-run số học (nếu có công thức toán mới) — không NaN/Inf ở mọi điểm biên
 [ ] Đã dry-run notebook cell-theo-cell (thành công + lỗi)
-[ ] Cell 7 đã dry-run phần xuất PDF — file .pdf tạo ra thật, đúng tên phương án + tên dataset
+[ ] Cell 7 đã dry-run phần xuất PDF bảng + PDF biểu đồ theo epoch — file .pdf tạo ra thật, đúng tên phương án + tên dataset
 [ ] Git repo độc lập, nằm NGOÀI mọi repo khác
 [ ] README bản fork có đối chiếu công thức gốc/mới
 [ ] Cell 1 notebook đã điền sẵn link người dùng cung cấp
