@@ -1,0 +1,64 @@
+======================================== BABY
+TỐI ƯU HÓA HOÀN TẤT!
+Bộ tham số tốt nhất: {'anchor_w': 2.289419350560652, 'lambda_y': 0.8987243664561934, 'lambda_z': 0.8681449554895736, 'sigma_min': 0.0007705076883409181}
+Recall@20 tốt nhất đạt: 0.09534
+
+---------------------------------------------------------------------------
+
+Sport
+
+[Trial 0] Đang chạy thử nghiệm với: anchor_w=4.4216, lambda_y=0.5410, lambda_z=0.9912, sigma_min=0.000406
+[I 2026-08-20 06:06:27,940] Trial 0 finished with value: 0.10238878099499871 and parameters: {'anchor_w': 4.421560465136229, 'lambda_y': 0.5409909775449707, 'lambda_z': 0.9911749321871278, 'sigma_min': 0.0004055918444906773}. Best is trial 0 with value: 0.10238878099499871.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.10239
+
+----------------------------------------------------------------------------
+
+Tiktok
+[Trial 3] Đang chạy thử nghiệm với: anchor_w=1.5701, lambda_y=0.7401, lambda_z=0.7889, sigma_min=0.001361
+[I 2026-08-19 19:00:59,324] Trial 3 finished with value: 0.11305057096247961 and parameters: {'anchor_w': 1.570149222534411, 'lambda_y': 0.7401495277338098, 'lambda_z': 0.7888949954735573, 'sigma_min': 0.0013611122065939375}. Best is trial 3 with value: 0.11305057096247961.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11305
+---------------------------------------------------------------------------------------
+BABY
+
+TỐI ƯU HÓA HOÀN TẤT!
+Bộ tham số tốt nhất: {'anchor_w': 2.4133358740683306, 'lambda_y': 0.3210529615457716, 'lambda_z': 0.45166828609762155, 'sigma_min': 0.00013972860874703945}
+Recall@20 tốt nhất đạt: 0.09729
+
+
+
+[Trial 6] Đang chạy thử nghiệm với: anchor_w=2.2307, lambda_y=0.6720, lambda_z=0.6450, sigma_min=0.000768
+[I 2026-08-20 06:38:30,156] Trial 6 finished with value: 0.0974919492096144 and parameters: {'anchor_w': 2.2306995817394597, 'lambda_y': 0.671956189718582, 'lambda_z': 0.6450342429433413, 'sigma_min': 0.000768391487981535}. Best is trial 6 with value: 0.0974919492096144.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.09749
+
+------------------------------------------------------------------
+sports
+[Trial 1] Đang chạy thử nghiệm với: anchor_w=1.0314, lambda_y=0.2952, lambda_z=0.9547, sigma_min=0.001682
+[I 2026-08-20 07:26:00,467] Trial 1 finished with value: 0.10243270177884867 and parameters: {'anchor_w': 1.031371097532162, 'lambda_y': 0.2951712199633223, 'lambda_z': 0.9547164499934944, 'sigma_min': 0.0016815127033653968}. Best is trial 1 with value: 0.10243270177884867.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.10243
+
+[Trial 2] Đang chạy thử nghiệm với: anchor_w=1.3617, lambda_y=0.2232, lambda_z=0.2701, sigma_min=0.000891
+[I 2026-08-20 08:31:32,311] Trial 2 finished with value: 0.10227723004564399 and parameters: {'anchor_w': 1.3617098580928966, 'lambda_y': 0.22324958726809863, 'lambda_z': 0.27013189707652174, 'sigma_min': 0.0008905344890814056}. Best is trial 1 with value: 0.10243270177884867.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.10228
+
+---------------------------------------------------------
+baby
+[Trial 2] Đang chạy thử nghiệm với: anchor_w=2.3575, lambda_y=0.5028, lambda_z=0.5285, sigma_min=0.001158
+[I 2026-08-20 14:48:04,703] Trial 2 finished with value: 0.09668748239846207 and parameters: {'anchor_w': 2.3575083983945704, 'lambda_y': 0.5027618213027769, 'lambda_z': 0.528471059580579, 'sigma_min': 0.0011584405158987989}. Best is trial 2 with value: 0.09668748239846207.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.09669
+------------------------------------------------------------------
+
+baby
+
+[Trial 5] Đang chạy thử nghiệm với: anchor_w=1.9901, lambda_y=0.5699, lambda_z=0.2047, sigma_min=0.000135
+[I 2026-08-20 15:30:44,625] Trial 5 finished with value: 0.09716918292130429 and parameters: {'anchor_w': 1.9901009605042759, 'lambda_y': 0.5698534177866587, 'lambda_z': 0.20472104350331644, 'sigma_min': 0.00013494765229401842}. Best is trial 5 with value: 0.09716918292130429.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.09717
+
+---------------------------------------------------------
+
+baby 
+
+[Trial 7] Đang chạy thử nghiệm với: anchor_w=2.6111, lambda_y=0.5151, lambda_z=0.3505, sigma_min=0.001933
+[I 2026-08-20 16:04:53,912] Trial 7 finished with value: 0.09669225777222691 and parameters: {'anchor_w': 2.6110906453384786, 'lambda_y': 0.515097253470014, 'lambda_z': 0.35050186047354637, 'sigma_min': 0.0019330625470665563}. Best is trial 7 with value: 0.09669225777222691.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.09669
+
+-------------------------------------------------------

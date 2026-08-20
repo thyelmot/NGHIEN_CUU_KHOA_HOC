@@ -1,0 +1,194 @@
+Đọc paper @<tên_file>.pdf cho tôi và viết lại toàn bộ nội dung vào 1 file markdown mới tên <TenPaper>_Review.md, theo đúng cấu trúc và mức độ chi tiết sau:
+
+Bảng thuật ngữ nền ở đầu file: liệt kê tất cả thuật ngữ/khái niệm tiếng Anh quan trọng xuất hiện trong paper (tên mô hình, kỹ thuật, loss, chỉ số đánh giá...) kèm giải thích tiếng Việt.
+Bối cảnh & động lực nghiên cứu: paper giải quyết vấn đề gì, tại sao các phương pháp trước chưa đủ tốt.
+Kiến trúc tổng thể: vẽ sơ đồ dạng text/ASCII thể hiện các khối/module chính và luồng dữ liệu đi qua chúng.
+Quy trình chi tiết theo từng giai đoạn (pipeline): mô tả từng bước xử lý từ đầu vào đến đầu ra, đủ chi tiết để tôi hình dung được quá trình vận hành thực tế, không bỏ qua bước trung gian nào.
+Với mỗi thuật ngữ tiếng Anh xuất hiện trong bài: giải thích ngay bằng tiếng Việt trong ngoặc đơn tại chỗ xuất hiện (không chỉ giải thích một lần rồi thôi, mà lặp lại xuyên suốt để không cần tra lại).
+Với mỗi ký hiệu toán học hoặc công thức: diễn giải ý nghĩa từng ký hiệu bằng lời (không chỉ chép công thức), sau đó thêm một câu "hình dung dễ nhất" bằng ví von thực tế đời sống để dễ tưởng tượng.
+Kết quả thực nghiệm: giải thích rõ các chỉ số đánh giá (metric) trước khi trình bày số liệu, tóm tắt kết quả chính, ablation study (nếu có) và ý nghĩa của từng thành phần bị loại bỏ.
+Điểm mạnh / hạn chế / hướng phát triển: nhận xét khách quan, không chỉ liệt kê ưu điểm paper tự nhận.
+Viết bằng tiếng Việt, văn phong dễ hiểu cho người mới, không dùng thuật ngữ tiếng Anh trần trụi mà không giải thích.
+
+
+--------------------------------------------------------------------------------------------------------------
+
+Đọc file @Flow_Matching_X/<TenPaper>_Review.md và file @DiffMM/DiffMM_Review.md, sau đó tạo trong
+cùng folder Flow_Matching_X 1 file markdown mới tên DiffMM_<TenVietTat>_Optimization_Plan.md, theo
+đúng cấu trúc sau (bám sát mức độ chi tiết của Flow_Matching_1/DiffMM_FlowMatching_Optimization_Plan.md
+đã làm trước đó):
+
+1. Vì sao 2 bài báo này "ghép" được với nhau — chỉ ra điểm chung về bản chất toán học/biểu diễn dữ
+   liệu giữa khối Diffusion Model của DiffMM và phương pháp <TenPhuongPhap>.
+2. Liệt kê tách rời TOÀN BỘ các giai đoạn/bước xử lý của DiffMM (ký hiệu D0, D1, D2...) — bảng có cột
+   Input→Output, Cơ chế cốt lõi, Công thức tham chiếu.
+3. Liệt kê tách rời TOÀN BỘ các giai đoạn/bước xử lý của <TenPhuongPhap> (ký hiệu riêng, ví dụ O0,
+   O1...) dựa đúng theo <TenPaper>_Review.md — cùng định dạng bảng như trên.
+4. Bảng đối chiếu tương đồng (mapping) giữa các giai đoạn DiffMM ↔ <TenPhuongPhap>: chỉ rõ khoảng
+   cách/khác biệt cốt lõi ở từng cặp tương đồng — bao gồm cả việc chỉ ra khi nào 1 kỹ thuật của
+   <TenPhuongPhap> **không thực sự cần thiết** cho DiffMM (vì DiffMM có thể đã sidestep vấn đề đó bằng
+   thiết kế hiện tại) — không cố "ghép cho bằng được" nếu không có cơ sở.
+5. Đề xuất các Phương án tối ưu cụ thể (đánh số tiếp theo các phương án đã có ở các
+   Flow_Matching_N/*_Optimization_Plan.md trước đó, không trùng số), mỗi phương án nêu: vị trí áp
+   dụng, thay đổi cụ thể, cơ sở lý thuyết, lợi ích kỳ vọng, rủi ro, độ khó (★☆☆☆☆ → ★★★★★). Ưu tiên
+   những ý tưởng THỰC SỰ MỚI so với các phương án đã có, chỉ rõ nếu 1 phương án là mở rộng/kết hợp với
+   phương án cũ.
+6. Lộ trình thực nghiệm đề xuất (roadmap theo tuần, kèm bảng ablation dự kiến).
+7. Rủi ro & lưu ý chung khi áp dụng (khác biệt loại dữ liệu, cần chọn lại hyperparameter, đo lường
+   công bằng...).
+
+Viết bằng tiếng Việt, văn phong kỹ thuật nhưng dễ theo dõi, không cần giải thích lại thuật ngữ cơ bản
+(đã có ở file Review).
+
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Đọc file <Ten_File_Optimization_Plan>.md. Tạo một folder mới tên <ten_folder_phuong_an> trong thư mục dự án, triển khai Phương án <số> — nêu rõ vị trí áp dụng, công thức/thay đổi cụ thể, và cơ sở lý thuyết đã ghi trong phương án đó (tham chiếu đúng số công thức/section trong file kế hoạch và trong file review paper gốc <Ten_File_Paper_Review>.md nếu phương án đó dựa trên ý tưởng từ paper khác).
+
+Bên trong folder đó cần có 2 phần:
+
+1. Một bản fork đầy đủ của codebase gốc (thư mục con, ví dụ <TenRepo>-<TenPhuongAn>/), lấy trực tiếp từ GitHub repo chính thức của phương pháp gốc (nêu rõ link repo) — patch áp thẳng vào code thật (sửa trực tiếp các file .py/.ipynb liên quan), không phải patch bằng string-replace lúc chạy runtime. Yêu cầu:
+
+Giữ nguyên 100% các phần không liên quan đến phương án, chỉ sửa đúng phần phương án chỉ định — nêu rõ trong code comment và trong README của folder này file/hàm/class nào bị sửa, đối chiếu công thức gốc ↔ công thức mới.
+Trước khi bàn giao, phải tự kiểm chứng thật (không chỉ viết mà không chạy thử): tải bản mới nhất của các file bị sửa từ repo gốc, áp patch, biên dịch (py_compile hoặc tương đương) để đảm bảo không lỗi cú pháp; nếu phương án có công thức toán mới, viết một đoạn kiểm tra số học độc lập (dry-run, không cần GPU/dữ liệu thật) để xác nhận điều kiện biên đúng và không phát sinh NaN/Inf/giá trị bất ổn — báo cáo lại kết quả kiểm chứng này trong README.
+git init + commit cục bộ (không tự ý push lên GitHub — việc push cần tài khoản của tôi, hãy đưa ra hướng dẫn từng bước để tôi tự push).
+Có .gitignore phù hợp (bỏ qua dữ liệu nặng, cache, file biên dịch).
+2. Một file Jupyter Notebook (.ipynb) để chạy trên Google Colab, với các cell theo đúng thứ tự:
+
+Cell cấu hình đầu vào: biến GITHUB_REPO_URL (link repo GitHub của tôi sau khi đã push bản fork ở trên), biến link Google Drive chứa dữ liệu, biến NUM_EPOCHS để tôi tự điều chỉnh, và mọi hyperparameter riêng mà phương án cần (nêu rõ ý nghĩa từng biến bằng comment).
+Cell setup môi trường: cài thư viện cần thiết, kiểm tra GPU.
+Cell clone code: clone từ GITHUB_REPO_URL (repo của tôi, không phải repo gốc).
+Cell tải dữ liệu: tự động tải/mount dữ liệu từ link Google Drive tôi dán ở Cell 1, tự dò cấu trúc, đặt đúng vào nơi code yêu cầu.
+Cell xác minh patch: kiểm tra lại bản clone đúng là bản đã có phương án được áp dụng (không phải bản gốc chưa sửa) — in ra danh sách kiểm tra rõ ràng, báo lỗi cụ thể nếu thiếu.
+Cell chạy huấn luyện: gọi script train chính, truyền NUM_EPOCHS và các hyperparameter tuỳ chỉnh từ Cell 1.
+Cell xuất kết quả: in ra bảng các chỉ số tốt nhất đạt được (đúng chỉ số đánh giá mà phương pháp gốc dùng), rõ ràng dễ đọc (pandas DataFrame hoặc bảng markdown).
+Viết code có comment ngắn gọn ở mọi chỗ sửa đổi. Sau khi hoàn tất, tóm tắt lại: đã kiểm chứng được gì (và bằng cách nào), và bước nào tôi cần tự làm tiếp (ví dụ: push GitHub, chạy thật trên Colab).
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
+
+Đọc file kế hoạch <Ten_File_Optimization_Plan>.md và làm theo đúng quy trình trong
+Folder_Base/HUONG_DAN_XAY_DUNG_FOLDER.md để tạo folder mới tên <ten_folder_phuong_an>, triển khai
+Phương án <số> (hoặc: toàn bộ nội dung file kế hoạch nếu chỉ có 1 phương án).
+
+Yêu cầu bắt buộc theo đúng quy trình đã ghi trong Folder_Base/HUONG_DAN_XAY_DUNG_FOLDER.md, không
+được bỏ qua bước nào, đặc biệt là Bước 4 (Kiểm chứng):
+
+Tải source code gốc THẬT từ GitHub (không đoán tên biến/hàm/class).
+Thiết kế patch tối thiểu (thêm, không sửa đè khi có thể), áp trực tiếp vào code.
+Kiểm chứng đầy đủ: biên dịch sạch (py_compile) trên bản mới nhất tải lại từ GitHub; nếu patch có công thức toán mới thì dry-run số học, quét hết dải tham số hợp lệ để chắc chắn không NaN/Inf; dry-run toàn bộ notebook cell-theo-cell (cả nhánh thành công lẫn nhánh lỗi).
+Đóng gói thành 1 git repo độc lập, đặt ở vị trí NGOÀI mọi git repo khác đang có trên máy (tự kiểm bằng git rev-parse --show-toplevel trước khi git init) — không lồng bên trong project.
+Dựng notebook Colab từ Folder_Base/Colab_Template.ipynb, điền đầy đủ mọi chỗ # TODO(...) (tên entry point thật, danh sách file dữ liệu, hyperparameter theo dataset, regex đọc kết quả — lấy từ README gốc và code thật, không đoán).
+Viết README cho bản fork (đối chiếu công thức gốc ↔ mới, file/hàm bị sửa) và README cho folder (theo mẫu Folder_Base/README.md).
+Nếu tôi đã cho link GitHub repo trống + link Google Drive, điền sẵn vào Cell 1 của notebook.
+Trước khi báo xong, dán checklist bàn giao ở cuối Folder_Base/HUONG_DAN_XAY_DUNG_FOLDER.md (mục 5) và đánh dấu rõ mục nào đã làm/mục nào chưa kiểm chứng được.
+Nếu phát hiện thêm "bẫy môi trường" mới không có trong bảng ở mục 3 của
+Folder_Base/HUONG_DAN_XAY_DUNG_FOLDER.md, hãy bổ sung ngay vào bảng đó để các phương án sau không
+gặp lại.
+
+(Nếu có: link GitHub repo trống đã tạo sẵn: <link> — link Google Drive chứa dữ liệu: <link>)
+
+pp2, pp5
+
+
+Dựa trên log lượt chạy đầu tiên (Trial 0) mà bạn cung cấp, bộ tham số đạt kết quả Recall@20 tốt nhất hiện tại là:
+
+ANCHOR_W (Cường độ điểm neo): 0.96961
+LAMBDA_Y (Trọng số quỹ đạo neo): 0.18285
+LAMBDA_Z (Trọng số quỹ đạo đứng yên): 0.41636
+SIGMA_MIN (Nhiễu nền tối thiểu): 0.00375 (hoặc 3.75e-3)
+Bộ tham số này giúp mô hình đạt chỉ số Recall@20 là 0.11387 ($11.387%$).
+
+---------------------------------------------------------------
+
+# ============================================================
+# CELL 1 — CẤU HÌNH ĐẦU VÀO (chỗ DUY NHẤT người dùng cần chỉnh sửa)
+# ============================================================
+
+GITHUB_REPO_URL = "https://github.com/thyelmot/DiffMM_7.git"  # repo GitHub riêng đã push code Phương án 7
+GDRIVE_LINK = "https://drive.google.com/drive/folders/1UdSihFXvm5frxb3nAxJ_uMaoZrFssqqD?usp=sharing"  # link thư mục Google Drive chứa dữ liệu
+DATASET_NAME = "baby"  # "tiktok" | "baby" | "sports"
+NUM_EPOCHS = 50         # <-- chỉnh số epoch mong muốn ở đây
+
+# Hyperparameter riêng của Phương án 7 (xem Params.py / README của DiffMM-TVS):
+SIGMA_MIN = 0.0037486745026259513         # [Phương án 1, tái dùng] sigma_min cho đường OT-linear
+W_CLIP = 50.0             # [Phương án 2, tái dùng] chặn trên trọng số CFM (kiểu Min-SNR)
+NUM_SAMPLE_STEPS = 0      # [Phương án 3, tái dùng] 0 = tự suy round(0.6*steps)
+ANCHOR_W = 0.9696105589546011            # [Phương án 6, tái dùng] cường độ điểm neo
+VELOCITY_MODE = 1         # [Phương án 7] 1: Bật TVS (hồi quy vận tốc), 0: Tắt TVS (hồi quy dữ liệu gốc, giống PA6)
+LAMBDA_X = 1.0            # Trọng số loss quỹ đạo chính
+LAMBDA_Y = 0.18284758906414375            # Trọng số loss quỹ đạo phụ 1 (neo thô)
+LAMBDA_Z = 0.4163560352251984            # Trọng số loss quỹ đạo phụ 2 (không đổi)
+PATIENCE = 7              # Kiên nhẫn dừng sớm (epochs không cải thiện); 0 để tắt
+
+assert GITHUB_REPO_URL.strip() != "", "Hãy dán URL repo GitHub của bạn vào GITHUB_REPO_URL ở trên trước khi chạy tiếp."
+assert GDRIVE_LINK.strip() != "", "Hãy dán link Google Drive vào biến GDRIVE_LINK ở trên trước khi chạy tiếp."
+assert DATASET_NAME.strip() != "", "Hãy điền tên dataset vào DATASET_NAME ở trên trước khi chạy tiếp."
+print(f"Cấu hình: repo={GITHUB_REPO_URL}, dataset={DATASET_NAME}, epochs={NUM_EPOCHS}, velocity_mode={VELOCITY_MODE}")
+
+-------------------------------------------------------------------------------------
+
+Đang cài đặt Optuna...
+[I 2026-08-19 17:48:57,113] A new study created in memory with name: no-name-4bb73ff7-2013-4afc-8831-113d216b5bef
+Bắt đầu tối ưu hóa bằng Optuna...
+
+[Trial 0] Đang chạy thử nghiệm với: anchor_w=0.9696, lambda_y=0.1828, lambda_z=0.4164, sigma_min=0.003749
+[I 2026-08-19 17:53:18,704] Trial 0 finished with value: 0.11386623164763458 and parameters: {'anchor_w': 0.9696105589546011, 'lambda_y': 0.18284758906414375, 'lambda_z': 0.4163560352251984, 'sigma_min': 0.0037486745026259513}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11387
+
+[Trial 1] Đang chạy thử nghiệm với: anchor_w=1.5444, lambda_y=0.7677, lambda_z=0.3940, sigma_min=0.001571
+[I 2026-08-19 17:56:23,034] Trial 1 finished with value: 0.10701468189233279 and parameters: {'anchor_w': 1.5444092804030676, 'lambda_y': 0.7677183665724971, 'lambda_z': 0.3940051030556678, 'sigma_min': 0.001571293133161668}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.10701
+
+[Trial 2] Đang chạy thử nghiệm với: anchor_w=3.6737, lambda_y=0.1551, lambda_z=0.9756, sigma_min=0.003892
+[I 2026-08-19 18:00:38,303] Trial 2 finished with value: 0.11060358890701469 and parameters: {'anchor_w': 3.6737069179812503, 'lambda_y': 0.15507812432920026, 'lambda_z': 0.9755940367823548, 'sigma_min': 0.003891501989936799}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11060
+
+[Trial 3] Đang chạy thử nghiệm với: anchor_w=2.4265, lambda_y=0.6180, lambda_z=0.1483, sigma_min=0.000690
+[I 2026-08-19 18:04:52,078] Trial 3 finished with value: 0.11060358890701469 and parameters: {'anchor_w': 2.426499484509847, 'lambda_y': 0.6180371128271707, 'lambda_z': 0.14828966194499563, 'sigma_min': 0.0006895564776798421}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11060
+
+[Trial 4] Đang chạy thử nghiệm với: anchor_w=4.4168, lambda_y=0.7142, lambda_z=0.1626, sigma_min=0.004275
+[I 2026-08-19 18:09:05,494] Trial 4 finished with value: 0.11256117455138662 and parameters: {'anchor_w': 4.416834187441243, 'lambda_y': 0.7141682992776004, 'lambda_z': 0.16256078167019294, 'sigma_min': 0.004274672210666221}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11256
+
+[Trial 5] Đang chạy thử nghiệm với: anchor_w=2.5140, lambda_y=0.5841, lambda_z=0.9101, sigma_min=0.002604
+[I 2026-08-19 18:13:21,672] Trial 5 finished with value: 0.11174551386623165 and parameters: {'anchor_w': 2.5139792645893437, 'lambda_y': 0.5841225185831689, 'lambda_z': 0.9100977288229292, 'sigma_min': 0.0026038275957115074}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11175
+
+[Trial 6] Đang chạy thử nghiệm với: anchor_w=1.2019, lambda_y=0.9391, lambda_z=0.9809, sigma_min=0.004842
+[I 2026-08-19 18:17:35,932] Trial 6 finished with value: 0.11190864600326264 and parameters: {'anchor_w': 1.2019448393217447, 'lambda_y': 0.9390815321135291, 'lambda_z': 0.9809422928837154, 'sigma_min': 0.004842453571497822}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11191
+
+[Trial 7] Đang chạy thử nghiệm với: anchor_w=3.6556, lambda_y=0.4512, lambda_z=0.1867, sigma_min=0.000241
+[I 2026-08-19 18:21:50,003] Trial 7 finished with value: 0.11109298531810767 and parameters: {'anchor_w': 3.655584633099014, 'lambda_y': 0.45124359768231603, 'lambda_z': 0.1867199514637169, 'sigma_min': 0.00024131655762691737}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11109
+
+[Trial 8] Đang chạy thử nghiệm với: anchor_w=4.9357, lambda_y=0.9074, lambda_z=0.8858, sigma_min=0.002342
+[I 2026-08-19 18:26:02,459] Trial 8 finished with value: 0.11125611745513866 and parameters: {'anchor_w': 4.935716531822632, 'lambda_y': 0.9074005119381849, 'lambda_z': 0.8857911411326312, 'sigma_min': 0.002341807878235922}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11126
+
+[Trial 9] Đang chạy thử nghiệm với: anchor_w=3.7926, lambda_y=0.4912, lambda_z=0.7616, sigma_min=0.000442
+[I 2026-08-19 18:30:17,209] Trial 9 finished with value: 0.10831973898858074 and parameters: {'anchor_w': 3.7926467068834375, 'lambda_y': 0.49116182767793093, 'lambda_z': 0.7615956583560576, 'sigma_min': 0.0004423759948787691}. Best is trial 0 with value: 0.11386623164763458.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.10832
+
+========================================
+TỐI ƯU HÓA HOÀN TẤT!
+Bộ tham số tốt nhất: {'anchor_w': 0.9696105589546011, 'lambda_y': 0.18284758906414375, 'lambda_z': 0.4163560352251984, 'sigma_min': 0.0037486745026259513}
+Recall@20 tốt nhất đạt: 0.11387
+
+-------------------------------------------------------------------
+[Trial 3] Đang chạy thử nghiệm với: anchor_w=1.5701, lambda_y=0.7401, lambda_z=0.7889, sigma_min=0.001361
+[I 2026-08-19 19:00:59,324] Trial 3 finished with value: 0.11305057096247961 and parameters: {'anchor_w': 1.570149222534411, 'lambda_y': 0.7401495277338098, 'lambda_z': 0.7888949954735573, 'sigma_min': 0.0013611122065939375}. Best is trial 3 with value: 0.11305057096247961.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.11305
+---------------------------------------------------------------------------------------
+Sport
+
+[Trial 0] Đang chạy thử nghiệm với: anchor_w=4.4216, lambda_y=0.5410, lambda_z=0.9912, sigma_min=0.000406
+[I 2026-08-20 06:06:27,940] Trial 0 finished with value: 0.10238878099499871 and parameters: {'anchor_w': 4.421560465136229, 'lambda_y': 0.5409909775449707, 'lambda_z': 0.9911749321871278, 'sigma_min': 0.0004055918444906773}. Best is trial 0 with value: 0.10238878099499871.
+-> Lượt chạy kết thúc. Recall@20 tốt nhất đạt: 0.10239
+
+----------------------------------------------------------------------------
