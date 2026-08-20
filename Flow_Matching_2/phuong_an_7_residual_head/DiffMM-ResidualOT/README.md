@@ -32,10 +32,15 @@ kiểm chứng hồi quy tại `anchor_w=0`, xem Giai đoạn Kiểm chứng bê
 
 | File | Thay đổi |
 |---|---|
-| `Params.py` | Thêm `--sigma_min`, `--w_clip`, `--num_sample_steps`, `--anchor_w` (kế thừa Phương án 3/6) và `--residual_head` (mặc định `0`, mới) |
+| `Params.py` | Thêm `--sigma_min`, `--w_clip`, `--num_sample_steps`, `--anchor_w` (kế thừa Phương án 3/6), `--residual_head`, và `--patience` (dừng sớm — tuỳ chọn, theo mẫu patch Bước 2b của `Folder_Base/HUONG_DAN_XAY_DUNG_FOLDER.md`, mặc định `5`, `0` để tắt) |
 | `Model.py` | Thêm `GaussianDiffusionOTCFM` (PA3), `GaussianDiffusionAnchorOT` (PA6) — sao chép nguyên vẹn, làm lớp cha — và `GaussianDiffusionResidualOT(GaussianDiffusionAnchorOT)` ở cuối file (mới). Chỉ override `p_mean_variance`, `p_sample`, `training_losses` để thêm đúng 1 dòng diễn giải lại `model_output`; thêm `_apply_residual_head`, `_need_anchor` |
-| `Main.py` | 1 dòng import, 1 dòng khởi tạo (đọc thêm `args.residual_head`) — **không đổi thêm gì khác** so với patch Phương án 6 (chữ ký `training_losses`/`p_sample` giữ nguyên) |
+| `Main.py` | 1 dòng import, 1 dòng khởi tạo (đọc thêm `args.residual_head`), và 1 khối `if args.patience > 0 and (ep - bestEpoch >= args.patience): break` trong `run()` — không đổi chữ ký `training_losses`/`p_sample` so với Phương án 6 |
 | `DataHandler.py` | `self.trnMat.A` → `self.trnMat.toarray()` (scipy ≥1.14 đã gỡ `.A`) |
+
+**Dừng sớm (`--patience`, mặc định `5`):** dừng huấn luyện nếu Recall trên tập test không cải thiện
+sau `patience` lần test liên tiếp — tiết kiệm thời gian khi quét nhiều cấu hình (đặc biệt hữu ích với
+Cell 8 — Optuna — trong notebook đi kèm). Đặt `--patience 0` để tắt, quay về hành vi chạy đủ `--epoch`
+như PA1-6.
 
 Toàn bộ phần còn lại (kiến trúc `Denoise` MLP, MSI/`gc_loss`, top-k rebuild đồ thị, Cross-Modal
 Contrastive Augmentation, Multi-Modal Graph Aggregation, Multi-Task Training) **giữ nguyên 100%**. MSI
@@ -53,6 +58,8 @@ dùng `model_output` **sau khi** đã cộng `α_l`, nên MSI luôn thấy đún
   độc lập).
 - Không NaN/Inf ở các trường hợp biên (user rỗng, `anchor_w` cực đoan) và ở quy mô gần thực tế
   (batch=1024, ~7000 item).
+- `--patience` là logic điều khiển vòng lặp thuần tuý (không đụng `Model.py`/công thức toán) — đã dry-run
+  qua notebook (nhánh Cell 5 phát hiện đúng khi bản fork CHƯA có `--patience`, và Cell 6 chạy đúng khi có).
 
 **Chưa kiểm chứng** (cần GPU + dữ liệu thật): liệu residual head có thực sự giúp mạng hội tụ nhanh
 hơn/tốt hơn hay không — đây là câu hỏi thực nghiệm, không thể trả lời ngoài GPU thật.

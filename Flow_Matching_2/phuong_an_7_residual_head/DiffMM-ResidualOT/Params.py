@@ -36,6 +36,9 @@ def ParseArgs():
 	parser.add_argument('--anchor_w', type=float, default=0.0, help='cuong do diem neo lam tam nhieu forward; 0 = tat')
 	parser.add_argument('--residual_head', type=int, default=0, help='1 = bat residual head (CT-7.5(v2): alpha_0_hat = alpha_l + Denoise(...)), 0 = tat, trung khit Phuong an 6')
 
+	# [Folder_Base - Buoc 2b] Early stopping tuy chon, khong anh huong cong thuc/mac dinh
+	parser.add_argument('--patience', type=int, default=5, help='So epoch test khong cai thien Recall truoc khi dung som; 0 = tat')
+
 	parser.add_argument('--rebuild_k', type=int, default=1)
 	parser.add_argument('--e_loss', type=float, default=0.1)
 	parser.add_argument('--ris_lambda', type=float, default=0.5)
