@@ -115,6 +115,14 @@ có sẵn α₀ thật, không sinh α₀ từ hư vô):
 
 ### 🔴 Phương án 7 — Tam giác hoá vận tốc (TVS), CHỈ dùng làm công cụ dự phòng cho Phương án 6
 
+> **Cập nhật:** xem bản v2 đầy đủ hơn ở
+> [`Phuong_An_7_TVS_KeHoachChiTiet_v2/`](Phuong_An_7_TVS_KeHoachChiTiet_v2/Phuong_An_7_TVS_KeHoachChiTiet_v2.md)
+> — sửa 1 lỗi dịch thuật (TVS thật chỉ huấn luyện 1 nhánh, không phải 3) và bổ sung 1 phương án thay thế
+> rẻ hơn — **Residual Head** — đã được triển khai đầy đủ (Giai đoạn A→C, xem
+> [`phuong_an_7_residual_head/`](phuong_an_7_residual_head/README.md), đã push lên
+> [thyelmot/DiffMM_7_v2](https://github.com/thyelmot/DiffMM_7_v2)). Nội dung TVS bản đổi
+> velocity-prediction bên dưới (bản v1) vẫn giữ nguyên trạng thái "ghi nhận, chưa triển khai".
+
 - **Vị trí áp dụng:** D2 (Reverse Diffusion / Denoising Model Training) — **chỉ khi và chỉ khi** Phương
   án 6 được triển khai theo đúng kiểu tham số hoá "dự đoán đại lượng phụ thuộc-anchor" thay vì giữ
   nguyên data-prediction thuần.
